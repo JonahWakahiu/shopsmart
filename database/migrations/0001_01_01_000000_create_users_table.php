@@ -15,9 +15,12 @@ return new class extends Migration {
             $table->string('name');
             $table->string('phone_number')->nullable();
             $table->string('avatar')->nullable();
+            $table->string('city')->nullable();
             $table->string('email')->unique();
+            $table->string('total_spent')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });

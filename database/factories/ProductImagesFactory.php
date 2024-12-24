@@ -19,8 +19,7 @@ class ProductImagesFactory extends Factory
     {
         return [
             'product_id' => Product::inRandomOrder()->first()->id,
-            'url' => fake()->imageUrl(640, 480),
-            'is_primary' => fake()->boolean(70),
+            'url' => 'https://picsum.photos/500/500?random=' . rand(1, 1000),
         ];
     }
 }

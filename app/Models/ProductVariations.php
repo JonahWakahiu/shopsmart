@@ -11,6 +11,13 @@ class ProductVariations extends Model
     /** @use HasFactory<\Database\Factories\ProductVariationsFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'variation_type',
+        'variation_value',
+        'variation_price',
+        'variation_stock_quantity',
+    ];
+
     // relationships
     public function product(): BelongsTo
     {

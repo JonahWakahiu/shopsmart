@@ -3,15 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -39,6 +43,8 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+
+
     protected function casts(): array
     {
         return [
@@ -47,9 +53,31 @@ class User extends Authenticatable
         ];
     }
 
-    // relayionships
+    protected function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn(?string $value) => $value ? (Str::startsWith($value, 'https') ? $value : '/storage/' . $value) : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=100',
+        );
+    }
+
+    protected function totalSpent(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->orders()->sum(\DB::raw('total_price - total_discount'))
+        );
+    }
+
+    // relationships
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
+
+    public function latestOrder(): HasOne
+    {
+        return $this->hasOne(Order::class)->latest('created_at')
+            ->select('id', 'created_at', 'user_id');
+    }
+
+
 }

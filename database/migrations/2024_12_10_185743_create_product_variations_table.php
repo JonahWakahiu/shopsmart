@@ -12,11 +12,10 @@ return new class extends Migration {
     {
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
-            $table->string('variation_type');
-            $table->string('variation_value');
+            $table->string('type');
+            $table->string('value');
             $table->decimal('price', 10, 2);
             $table->integer('stock_quantity');
-            $table->string('sku');
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

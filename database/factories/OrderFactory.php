@@ -21,7 +21,6 @@ class OrderFactory extends Factory
     {
         return [
             'order_number' => fake()->numerify('ORD-######'),
-            'status' => fake()->randomElement(['pending', 'completed', 'cancelled']),
             'total_price' => fake()->randomFloat(2, 100, 1000),
             'user_id' => User::inRandomOrder()->first()->id,
         ];
@@ -35,9 +34,12 @@ class OrderFactory extends Factory
             foreach ($products as $product) {
                 $order->products()->attach($product, [
                     'quantity' => rand(1, 5),
-                    'price' => $product->price,
                 ]);
             }
+
+            $order->statuses()->create([
+                'status' => 'pending',
+            ]);
         });
     }
 }

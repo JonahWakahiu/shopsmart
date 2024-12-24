@@ -16,4 +16,13 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    public function totalEarnings()
+    {
+        $total = $this->products->map(function ($product) {
+            return $product->orders->sum('total_price');
+        })->sum();
+
+        return \Number::currency($total);
+    }
 }

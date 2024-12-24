@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+[x-cloak] {
+    display: none !important;
+}
+
+@layer utilities {
+    #toolbar-container {
+        @apply rounded-t-md hover:border-x-blue-500 hover:border-t-blue-500 !important;
+    }
+    #editor {
+        @apply min-h-40 rounded-b-md hover:border-x-blue-500 hover:border-b-blue-500 !important;
+    }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    height: 8px; /* Horizontal scrollbar height */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888; /* Scrollbar thumb color */
+    border-radius: 10px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Scrollbar thumb color on hover */
+}
+
+/* For Firefox */
+.custom-scrollbar {
+    scrollbar-color: #888 #f1f1f1; /* Thumb and track colors */
+    scrollbar-width: thin; /* Set scrollbar width */
+}
+
+.custom-scrollbar {
+    scrollbar-width: none; /* Hide scrollbar initially for Firefox */
+}
+
+.custom-scrollbar:hover {
+    scrollbar-width: thin; /* Show thin scrollbar on hover for Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    display: none; /* Hide scrollbar initially for WebKit browsers */
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar {
+    display: block; /* Show scrollbar on hover for WebKit browsers */
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    @apply rounded-full bg-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center size-10 p-1.5 !important;
+}
+
+/* Adjust the SVG arrow size and position */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    display: none;
+}

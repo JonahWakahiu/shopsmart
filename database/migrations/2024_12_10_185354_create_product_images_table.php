@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
             $table->string('url');
-            $table->boolean('is_primary');
             $table->timestamps();
         });
     }

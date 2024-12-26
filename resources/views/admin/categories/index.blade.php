@@ -275,7 +275,7 @@
 
                         async getCategories() {
                             try {
-                                const response = await axios.get('{{ route('categories.list') }}', {
+                                const response = await axios.get('{{ route('admin.categories.list') }}', {
                                     params: {
                                         q: this.q,
 
@@ -305,10 +305,11 @@
 
                             if (Object.keys(this.selectedCategory).length === 0) {
                                 try {
-                                    const response = await axios.post('{{ route('categories.store') }}', {
-                                        name: formData.get('name'),
-                                        slug: formData.get('slug'),
-                                    });
+                                    const response = await axios.post(
+                                        '{{ route('admin.categories.store') }}', {
+                                            name: formData.get('name'),
+                                            slug: formData.get('slug'),
+                                        });
 
                                     if (response.status === 200) {
                                         this.getCategories();
@@ -329,7 +330,7 @@
                             if (Object.keys(this.selectedCategory).length > 0) {
                                 try {
                                     const response = await axios.put(
-                                        `{{ route('categories.update', ':id') }}`
+                                        `{{ route('admin.categories.update', ':id') }}`
                                         .replace(':id', this.selectedCategory.id), {
                                             name: formData.get('name'),
                                             slug: formData.get('slug'),
@@ -360,7 +361,7 @@
                             }
                             try {
                                 const response = await axios.delete(
-                                    `{{ route('categories.destroy', ':id') }}`.replace(':id', id));
+                                    `{{ route('admin.categories.destroy', ':id') }}`.replace(':id', id));
 
                                 if (response.status === 200) {
                                     this.getCategories();

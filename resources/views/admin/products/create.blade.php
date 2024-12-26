@@ -486,7 +486,7 @@
                                     });
                                 }
 
-                                const response = await axios.post('{{ route('products.store') }}',
+                                const response = await axios.post('{{ route('admin.products.store') }}',
                                     formData);
 
                                 if (response.status === 200) {

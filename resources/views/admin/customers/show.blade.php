@@ -94,7 +94,7 @@
                                         <template x-for="order in customerOrders" :key="order.id">
                                             <tr>
                                                 <td class="p-3">
-                                                    <a :href="`{{ route('orders.show', ':id') }}`.replace(':id', order.id)"
+                                                    <a :href="`{{ route('admin.orders.show', ':id') }}`.replace(':id', order.id)"
                                                         class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
                                                         x-text="order.order_number"></a>
                                                 </td>
@@ -415,8 +415,9 @@
 
                     async getCustomerOrders() {
                         try {
-                            const url = `{{ route('customer.orders', '__customerId__') }}`.replace(
-                                '__customerId__', this.customer.id);
+                            const url = `{{ route('admin.customer.orders', '__customerId__') }}`
+                                .replace(
+                                    '__customerId__', this.customer.id);
 
                             const response = await axios.get(url, {
                                 params: {

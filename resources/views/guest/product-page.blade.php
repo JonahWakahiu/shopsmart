@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-index-layout>
     <div class="py-12" x-data="viewProduct">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <h6 class="font-semibold text-2xl text-black dark:text-white mb-4">Product Page</h6>
@@ -26,6 +26,7 @@
                         </template>
                     </div>
 
+
                     <div class="flex items-center space-x-5">
                         <button
                             class="w-full min-w-fit px-5 rounded-3xl py-2 border border-orange-500 text-orange-500 flex items-center justify-center space-x-2">
@@ -38,8 +39,16 @@
                         </button>
 
                         <template x-if="product.variations < 1">
-
-                            <button @click="$store.cart.addProduct(product)"
+                            <button
+                                @click="$store.cart.addProduct({
+                                    id:product.id,
+                                    name:product.name,
+                                    oldest_image: product.oldest_image.url || '',
+                                    price: product.price,
+                                    stock_quantity: product.stock_quantity,
+                                    discount: product.discount || 0,
+                                    userSelectedQuantity: quantity
+                                    })"
                                 class="w-full min-w-fit px-5 rounded-3xl py-2 bg-orange-500 text-white hover:bg-orange-500/80 flex items-center space-x-2 justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                     fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
@@ -69,11 +78,13 @@
                     <div>
                         <p class="">Price</p>
                         <div class="flex items-baseline gap-5">
-                            <p x-text="'$' +( product.price - product.discount)" class="text-4xl font-semibold">
+                            <p x-text="'$' +( product.price - product.discount).toFixed(2)"
+                                class="text-4xl font-semibold">
                             </p>
 
                             <template x-if="product.discount">
-                                <p x-text="'$'+product.price" class="text-lg font-medium line-through text-slate-600 ">
+                                <p x-text="'$'+product.price"
+                                    class="text-lg font-medium line-through text-slate-600 dark:text-slate-400">
                                 </p>
                             </template>
                         </div>
@@ -105,12 +116,13 @@
                     </template>
 
                     <template x-if="product.variations < 1">
+
                         <div>
                             <p>Quantity</p>
 
                             <div class="flex items-center space-x-2">
                                 <button @click="decreaseQuantity"
-                                    class="bg-slate-100 rounded-md p-2 shadow-md border border-slate-200 flex items-center justify-center text-blue-500"
+                                    class="bg-slate-100 dark:bg-slate-700 rounded-md p-1 shadow-md border border-slate-200 flex items-center justify-center text-blue-500"
                                     type="button">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -119,10 +131,10 @@
                                     </svg>
                                 </button>
 
-                                <div class="p-2" x-text="quantity"></div>
+                                <div class="p-2 text-sm font-medium" x-text="quantity"></div>
 
                                 <button @click="increaseQuantity"
-                                    class="bg-slate-100 rounded-md p-2 shadow-md border border-slate-200  flex items-center justify-center text-blue-500"
+                                    class="bg-slate-100 dark:bg-slate-700  rounded-md p-1 shadow-md border border-slate-200  flex items-center justify-center text-blue-500"
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                         class="bi bi-plus size-5" viewBox="0 0 16 16">
@@ -173,36 +185,39 @@
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     <template x-for="similarProduct in similarProducts">
-                        <div class="swiper-slide">
-                            <div class="w-full h-48 rounded-md overflow-hidden shadow-md">
-                                <img :src="similarProduct.oldest_image.url" :alt="similarProduct.name"
-                                    class="object-cover object-center w-full h-full">
-                            </div>
-                            <div class="pt-3">
-                                <a :href="`{{ route('admin.products.show', ':id') }}`.replace(':id', similarProduct.id)"
-                                    class="whitespace-normal text-sm font-semibold hover:text-blue-600 hover:underline underline-offset-1"
-                                    x-text="similarProduct.name"></a>
+                        <div class="swiper-slide group">
+                            <a :href="`{{ route('products.show', ':id') }}`.replace(':id', similarProduct.id)">
 
-                                <div>
-                                    <div class="flex items-center ">
-                                        <template x-for="i in 5">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                class="size-4 fill-amber-500 text-amber-500">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                                            </svg>
-                                        </template>
-                                    </div>
-                                    <span class="text-xs font-semibold text-slate-600">(6548 People rated)</span>
+                                <div class="w-full h-48 rounded-md overflow-hidden shadow-md">
+                                    <img :src="similarProduct.oldest_image.url" :alt="similarProduct.name"
+                                        class="object-cover object-center w-full h-full">
                                 </div>
+                                <div class="pt-3">
+                                    <p class="whitespace-normal text-sm font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-500 capitalize  group-hover:underline underline-offset-1"
+                                        x-text="similarProduct.name"></p>
 
-                                <p x-text="'$' + similarProduct.price" class="font-semibold text-lg mt-4"></p>
+                                    <div>
+                                        <div class="flex items-center ">
+                                            <template x-for="i in 5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="size-4 fill-amber-500 text-amber-500">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                                                </svg>
+                                            </template>
+                                        </div>
+                                        <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">(6548
+                                            People rated)</span>
+                                    </div>
 
-                            </div>
+                                    <p x-text="'$' + similarProduct.price" class="font-semibold text-lg mt-4"></p>
+                                </div>
+                            </a>
                         </div>
                     </template>
                 </div>
+
                 <div class="swiper-button-next">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-chevron-right size-4"
                         viewBox="0 0 16 16">
@@ -230,7 +245,7 @@
             <div x-show="showModal"
                 x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
                 x-transition:enter-start="scale-0" x-transition:enter-end="scale-100"
-                class="w-full p-7 pt-5  max-w-lg rounded-xl border border-slate-300 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 relative">
+                class="w-full p-7 pt-5  max-w-lg rounded-xl border border-slate-300 bg-white text-slate-700 dark:border-slate-800 dark:bg-slate-700 dark:text-slate-300 relative">
 
                 <button
                     class="absolute right-0 top-0 -translate-y-1/2 bg-slate-100 dark:bg-slate-800 shadow-md translate-x-1/2 p-1.5 rounded-md"
@@ -252,12 +267,26 @@
                             decreaseVariationQuantity() {
                                 if (this.userSelectedQuantity > 0) {
                                     this.userSelectedQuantity--;
+                                    this.$store.cart.removeProduct(product.id, variation.id, variation.value);
                                 }
                             },
                         
                             increaseVariationQuantity() {
                                 if (this.userSelectedQuantity < variation.stock_quantity) {
                                     this.userSelectedQuantity++;
+                        
+                                    this.$store.cart.addProduct({
+                                        id: product.id,
+                                        name: product.name,
+                                        oldest_image: product.oldest_image.url || '',
+                                        price: variation.price,
+                                        stock_quantity: variation.stock_quantity,
+                                        discount: product.discount || 0,
+                                        variation_id: variation.id,
+                                        variation_type: variation.type,
+                                        variation_value: variation.value,
+                                        userSelectedQuantity: this.userSelectedQuantity,
+                                    });
                                 }
                             }
                         }">
@@ -284,8 +313,8 @@
                             </div>
 
                             <div class="flex items-center space-x-2">
-                                <button @click="decreaseVariationQuantity"
-                                    class="bg-slate-100 rounded-md p-2 shadow-md border border-slate-200 flex items-center justify-center text-blue-500"
+                                <button type="button" @click="decreaseVariationQuantity"
+                                    class="bg-slate-100 dark:bg-slate-800  rounded-md p-2 shadow-md border border-slate-200 dark:border-slate-800 flex items-center justify-center text-blue-500"
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                         class="bi bi-dash size-5" viewBox="0 0 16 16">
@@ -295,8 +324,8 @@
 
                                 <div class="p-2" x-text="userSelectedQuantity"></div>
 
-                                <button @click="increaseVariationQuantity()"
-                                    class="bg-slate-100 rounded-md p-2 shadow-md border border-slate-200 flex items-center justify-center text-blue-500"
+                                <button type="button" @click="increaseVariationQuantity"
+                                    class="bg-slate-100 dark:bg-slate-800  rounded-md p-2 shadow-md border border-slate-200 dark:border-slate-800 flex items-center justify-center text-blue-500"
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                         class="bi bi-plus size-5" viewBox="0 0 16 16">
@@ -313,19 +342,19 @@
                 <div class="my-2.5 border-b border-slate-300 dark:border-slate-700"></div>
 
                 <div class="flex items-center space-x-5">
-                    <button
-                        class="w-full min-w-fit px-5 rounded-md py-2 border border-orange-500 text-orange-500 flex items-center justify-center space-x-2">
+                    <a href="{{ route('home') }}"
+                        class="cursor-pointer w-full min-w-fit px-5 rounded-md py-2 border border-orange-500 text-orange-500 flex items-center justify-center space-x-2">
                         <span>Continue Shopping</span>
-                    </button>
-                    <button
-                        class="w-full min-w-fit px-5 rounded-md py-2 bg-orange-500 text-white hover:bg-orange-500/80 flex items-center space-x-2 justify-center">
+                    </a>
+                    <a href="{{ route('cart') }}"
+                        class="cursor-pointer w-full min-w-fit px-5 rounded-md py-2 bg-orange-500 text-white hover:bg-orange-500/80 flex items-center space-x-2 justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-cart-fill" viewBox="0 0 16 16">
                             <path
                                 d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                         </svg>
                         <span>Go to cart</span>
-                    </button>
+                    </a>
                 </div>
 
             </div>
@@ -381,4 +410,4 @@
             })
         </script>
     @endpush
-</x-app-layout>
+    </x-app-layout>

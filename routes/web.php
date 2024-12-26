@@ -7,54 +7,74 @@ use App\Http\Controllers\Admin\OrdersController;
 use App\Http\Controllers\Admin\PermissionsController;
 use App\Http\Controllers\Admin\ProductsController;
 use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\Guest\ProductGuestController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('guest.homepage');
+})->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// guest
+Route::controller(ProductGuestController::class)->group(function () {
+    Route::get('products/list', 'getProducts')->name('products/list');
+    Route::get('products/{product}', 'show')->name('products.show');
+    Route::get('cart', 'cart')->name('cart');
+});
+
+
+// auth
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/profile', 'edit')->name('profile.edit');
+        Route::patch('/profile', 'update')->name('profile.update');
+        Route::delete('/profile', 'destroy')->name('profile.destroy');
+    });
 
 
-    Route::get('products/list', [ProductsController::class, 'getProducts'])->name('products.list');
-    Route::get('categories/list', [CategoriesController::class, 'getCategories'])->name('categories.list');
-    Route::get('orders/list', [OrdersController::class, 'getOrders'])->name('orders.list');
-    Route::get('customers/list', [CustomersController::class, 'getCustomers'])->name('customers.list');
-    Route::get('roles/list', [RolesController::class, 'getRoles'])->name('roles.list');
-    Route::get('permissions/list', [PermissionsController::class, 'getPermissions'])->name('permissions.list');
+    Route::prefix('admin')->name('admin.')->group(function () {
 
-    Route::post('user/{user}/roles', [CustomersController::class, 'updatedUserRoles'])->name('user.roles');
-    Route::post('user/{user}/status', [CustomersController::class, 'updateUserStatus'])->name('user.status');
+        Route::get('categories/list', [CategoriesController::class, 'getCategories'])->name('categories.list');
+        Route::get('roles/list', [RolesController::class, 'getRoles'])->name('roles.list');
+        Route::get('permissions/list', [PermissionsController::class, 'getPermissions'])->name('permissions.list');
 
-    Route::delete('product/{product}/image/{image}', [ProductsController::class, 'destroyProductImage'])->name('image.delete');
+        Route::controller(CustomersController::class)->group(function () {
+            Route::get('customers/list', 'getCustomers')->name('customers.list');
+            Route::post('user/{user}/roles', 'updatedUserRoles')->name('user.roles');
+            Route::post('user/{user}/status', 'updateUserStatus')->name('user.status');
+            Route::get('customer/{customer}/orders', 'getCustomerOrders')->name('customer.orders');
+        });
 
-    Route::put('orders/{order}/status', [OrdersController::class, 'updateStatus'])->name('orders.update.status');
-    Route::put('orders/{order}/payment', [OrdersController::class, 'updatePaymentStatus'])->name('orders.update.payment');
-    Route::put('orders/{order}/cancel', [OrdersController::class, 'cancelOrder'])->name('orders.cancel');
+        Route::controller(ProductsController::class)->group(function () {
+            Route::get('products/list', 'getProducts')->name('products.list');
+            Route::delete('product/{product}/image/{image}', 'destroyProductImage')->name('image.delete');
+            Route::put('products/{product}/stock', 'updateStock')->name('products.update.stock');
+        });
 
-    Route::get('customer/{customer}/orders', [CustomersController::class, 'getCustomerOrders'])->name('customer.orders');
+        Route::controller(OrdersController::class)->group(function () {
+            Route::get('orders/list', 'getOrders')->name('orders.list');
+            Route::put('orders/{order}/status', 'updateStatus')->name('orders.update.status');
+            Route::put('orders/{order}/payment', 'updatePaymentStatus')->name('orders.update.payment');
+            Route::put('orders/{order}/cancel', 'cancelOrder')->name('orders.cancel');
+        });
 
-    Route::put('products/{product}/stock', [ProductsController::class, 'updateStock'])->name('products.update.stock');
+        Route::resource('products', ProductsController::class);
+        Route::resource('categories', CategoriesController::class)->except([
+            'create',
+            'show',
+            'edit'
+        ]);
+        Route::resource('orders', OrdersController::class);
+        Route::resource('customers', CustomersController::class);
 
-    Route::resource('products', ProductsController::class);
-    Route::resource('categories', CategoriesController::class)->except([
-        'create',
-        'show',
-        'edit'
-    ]);
-    Route::resource('orders', OrdersController::class);
-    Route::resource('customers', CustomersController::class);
+        Route::resource('roles', RolesController::class);
+        Route::resource('permissions', PermissionsController::class);
+    });
 
-    Route::resource('roles', RolesController::class);
-    Route::resource('permissions', PermissionsController::class);
 });
 
 require __DIR__ . '/auth.php';

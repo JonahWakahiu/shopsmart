@@ -72,7 +72,8 @@
                                 <td class="p-3">
                                     <div class="flex items-center gap-3">
                                         <a
-                                            :href="`{{ route('customers.show', '__id__') }}`.replace('__id__', customer.id)">
+                                            :href="`{{ route('admin.customers.show', '__id__') }}`.replace('__id__', customer
+                                                .id)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                                                 <path
@@ -81,7 +82,6 @@
                                                     d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
                                             </svg>
                                         </a>
-
 
                                         <button class="text-red-500" @click="deleteCustomer(customer.id)">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -94,6 +94,17 @@
                                         </button>
                                     </div>
                                 </td>
+                            </tr>
+                        </template>
+                        <template x-if="isLoading">
+                            <tr>
+                                <td class="p-3 text-center" colspan="10">Loading...</td>
+                            </tr>
+                        </template>
+
+                        <template x-if="!isLoading && customers.length < 1">
+                            <tr>
+                                <td class="p-3 text-center" colspan="10">No customers available</td>
                             </tr>
                         </template>
                     </tbody>
@@ -217,6 +228,7 @@
                 Alpine.data('customerManagement', function() {
                     return {
                         customers: {},
+                        isLoading: false,
 
                         // pagination
                         rowsPerPage: 10,
@@ -231,7 +243,8 @@
 
                         async getCustomers() {
                             try {
-                                const response = await axios.get('{{ route('customers.list') }}', {
+                                this.isLoading = true;
+                                const response = await axios.get('{{ route('admin.customers.list') }}', {
                                     params: {
                                         rowsPerPage: this.rowsPerPage,
                                         page: this.currentPage,
@@ -241,6 +254,7 @@
                                 });
 
                                 if (response.status === 200) {
+                                    this.isLoading = false;
                                     this.customers = response.data.data;
 
                                     this.from = response.data.from;
@@ -251,6 +265,7 @@
 
                                 }
                             } catch (error) {
+                                this.isLoading = false;
                                 console.log(error);
 
                             }
@@ -289,8 +304,9 @@
 
                         async deleteCustomer(customerId) {
                             try {
-                                const url = `{{ route('customers.destroy', '__customerId__') }}`.replace(
-                                    '__customerId__', customerId);
+                                const url = `{{ route('admin.customers.destroy', '__customerId__') }}`
+                                    .replace(
+                                        '__customerId__', customerId);
 
                                 const response = await axios.delete(url);
 

@@ -474,7 +474,7 @@
                             });
 
                             try {
-                                const url = `{{ route('products.update', '__product__') }}`.replace(
+                                const url = `{{ route('admin.products.update', '__product__') }}`.replace(
                                     '__product__', this.product.id);
 
 
@@ -514,7 +514,7 @@
                             try {
 
                                 const url =
-                                    `{{ route('image.delete', ['product' => '__productId__', 'image' => '__imageId__']) }}`
+                                    `{{ route('admin.image.delete', ['product' => '__productId__', 'image' => '__imageId__']) }}`
                                     .replace('__productId__', productId)
                                     .replace('__imageId__', imageId);
 

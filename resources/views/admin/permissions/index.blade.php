@@ -9,15 +9,6 @@
             <div class="flex items-center justify-between mb-4">
                 <x-search-input x-model="q" class="min-w-[300px]" />
 
-                <a href="{{ route('products.create') }}"
-                    class="flex items-center whitespace-nowrap gap-2 text-sm bg-blue-500 hover:bg-blue-500/80 px-5 py-1.5 rounded-md text-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus size-5 shrink-0"
-                        viewBox="0 0 16 16">
-                        <path
-                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
-                    </svg>
-                    <span>Add Permission</span></a>
-
             </div>
         </div>
 
@@ -210,7 +201,7 @@
 
                             async getPermissions() {
                                 try {
-                                    const response = await axios.get('{{ route('permissions.list') }}', {
+                                    const response = await axios.get('{{ route('admin.permissions.list') }}', {
                                         params: {
                                             rowsPerPage: this.rowsPerPage,
                                             page: this.currentPage,

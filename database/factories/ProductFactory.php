@@ -26,9 +26,11 @@ class ProductFactory extends Factory
             'short_description' => fake()->sentences(2, true),
             'description' => $this->generateRandomHtml(),
             'price' => fake()->randomFloat(2, 10, 500),
+            'discount' => null,
             'status' => fake()->randomElement(['sheduled', 'published', 'inactive']),
             'stock_quantity' => fake()->numberBetween(0, 100),
             'sku' => strtoupper(Str::random(8)),
+            'is_top_deal' => fake()->boolean(50),
             'category_id' => Category::inRandomOrder()->first()->id,
         ];
     }
@@ -60,6 +62,13 @@ class ProductFactory extends Factory
         shuffle($htmlContent);
 
         return implode("\n", $htmlContent);
+    }
+
+    public function withDiscount()
+    {
+        return $this->state(fn(array $attributes) => [
+            'discount' => $this->faker->randomFloat(2, 1, 20),
+        ]);
     }
 
     public function configure(): static

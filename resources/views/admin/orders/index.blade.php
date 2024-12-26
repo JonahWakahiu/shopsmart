@@ -62,7 +62,7 @@
                         <template x-for="order in orders" :key="order.id">
                             <tr>
                                 <td class="p-3">
-                                    <a :href="`{{ route('orders.show', ':id') }}`.replace(':id', order.id)"
+                                    <a :href="`{{ route('admin.orders.show', ':id') }}`.replace(':id', order.id)"
                                         class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
                                         x-text="order.order_number"></a>
                                 </td>
@@ -219,6 +219,12 @@
                                 <td class="p-3 text-center" colspan="10">Loading...</td>
                             </tr>
                         </template>
+
+                        <template x-if="!isLoading && orders.length < 1">
+                            <tr>
+                                <td class="p-3 text-center" colspan="10">No orders available</td>
+                            </tr>
+                        </template>
                     </tbody>
                 </table>
             </div>
@@ -358,7 +364,7 @@
                         async getOrders() {
                             try {
                                 this.isLoading = true;
-                                const response = await axios.get('{{ route('orders.list') }}', {
+                                const response = await axios.get('{{ route('admin.orders.list') }}', {
                                     params: {
                                         rowsPerPage: this.rowsPerPage,
                                         page: this.currentPage,

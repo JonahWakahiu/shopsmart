@@ -39,17 +39,19 @@
                             </div>
                         </div>
 
-                        <p class="mt-4 capitalize text-black dark:text-white" x-text="role.name"></p>
+                        <p class="mt-4 capitalize text-black dark:text-white" id="role.name" x-text="role.name"></p>
                         <div class="flex items-center justify-between flex-shrink-0">
                             <button type="button" class="text-blue-700 mt-1"
                                 @click="editRoleModal = true, selectedRole = { ...role, permissions: role.permissions.map(p => p.name) }">Edit
                                 Role</button>
 
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-copy size-5 "
-                                viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
-                            </svg>
+                            <button @click="  navigator.clipboard.writeText(role.name)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-copy size-5 "
+                                    viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                                </svg>
+                            </button>
 
                         </div>
                     </div>
@@ -224,6 +226,16 @@
 
                                     </div>
                                 </td>
+                            </tr>
+                        </template>
+                        <template x-if="isLoading">
+                            <tr>
+                                <td class="p-3 text-center" colspan="10">Loading...</td>
+                            </tr>
+                        </template>
+                        <template x-if="!isLoading && users.length < 1">
+                            <tr>
+                                <td class="p-3 text-center" colspan="10">No users available</td>
                             </tr>
                         </template>
                     </tbody>
@@ -422,6 +434,7 @@
                         selectedRole: {
                             permissions: [],
                         },
+                        isLoading: false,
 
                         searchUser: '',
                         filterByRole: '',
@@ -444,7 +457,8 @@
 
                         async getRoles() {
                             try {
-                                const response = await axios.get('{{ route('roles.list') }}', {
+                                this.isLoading = true;
+                                const response = await axios.get('{{ route('admin.roles.list') }}', {
                                     params: {
                                         rowsPerPage: this.rowsPerPage,
                                         page: this.currentPage,
@@ -456,6 +470,7 @@
                                 });
 
                                 if (response.status === 200) {
+                                    this.isLoading = false;
                                     this.roles = response.data.roles;
                                     this.users = response.data.users.data;
                                     this.allPermissions = response.data.permissions;
@@ -468,6 +483,7 @@
 
                                 }
                             } catch (error) {
+                                this.isLoading = false;
                                 console.log(error);
 
                             }
@@ -475,7 +491,7 @@
 
                         async updateUserRoles() {
                             try {
-                                const response = await axios.post(`{{ route('user.roles', ':id') }}`
+                                const response = await axios.post(`{{ route('admin.user.roles', ':id') }}`
                                     .replace(':id', this.selectedUser.id), {
                                         roles: this.selectedUser.roles,
                                     });
@@ -496,7 +512,7 @@
 
                         async updateUserStatus(userId, event) {
                             try {
-                                const response = await axios.post(`{{ route('user.status', ':id') }}`
+                                const response = await axios.post(`{{ route('admin.user.status', ':id') }}`
                                     .replace(':id', userId), {
                                         status: event.target.value,
                                     });
@@ -517,7 +533,7 @@
 
                         async updateRolePermissions() {
                             try {
-                                const response = await axios.put(`{{ route('roles.update', ':id') }}`
+                                const response = await axios.put(`{{ route('admin.roles.update', ':id') }}`
                                     .replace(':id', this.selectedRole.id), {
                                         permissions: this.selectedRole.permissions,
                                     });

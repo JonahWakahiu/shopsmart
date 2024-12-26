@@ -19,8 +19,6 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-
-
         $categories = [
             ['name' => "Men's Clothing", 'slug' => 'mens-clothing'],
             ['name' => "Women's Clothing", 'slug' => 'womens-clothing'],
@@ -31,7 +29,7 @@ class ProductSeeder extends Seeder
             ['name' => "Baby Products", 'slug' => 'baby-products'],
             ['name' => "Pet Supplies", 'slug' => 'pet-supplies'],
             ['name' => "Books", 'slug' => 'books'],
-            ['name' => "Toys", 'slug' => 'toys'],
+            ['name' => "Electronics", 'slug' => 'electronics'],
         ];
 
         foreach ($categories as $category) {
@@ -39,13 +37,31 @@ class ProductSeeder extends Seeder
         }
 
         Product::factory()
-            ->count(50)
+            ->count(20)
+            ->withDiscount()
+            ->has(ProductImages::factory()->count(rand(2, 5)), 'images')
+            ->create();
+
+        Product::factory()
+            ->count(20)
+            ->has(ProductImages::factory()->count(rand(2, 5)), 'images')
+            ->create();
+
+        Product::factory()
+            ->count(20)
+            ->has(ProductImages::factory()->count(rand(2, 5)), 'images')
+            ->has(ProductVariations::factory()->count(rand(2, 5)), 'variations')
+            ->create();
+
+        Product::factory()
+            ->count(20)
+            ->withDiscount()
             ->has(ProductImages::factory()->count(rand(2, 5)), 'images')
             ->has(ProductVariations::factory()->count(rand(2, 5)), 'variations')
             ->create();
 
         Order::factory()
-            ->count(20)
+            ->count(30)
             ->withProducts()
             ->has(Payment::factory())
             ->create();

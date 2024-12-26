@@ -382,7 +382,7 @@
 
                             <div class="flex items-center justify-between text-ld font-medium">
                                 <span>Total</span>
-                                <span x-text="'$'+(order.total_price - order.total_discount)"></span>
+                                <span x-text="'$'+(order.total_price - order.total_discount).toFixed(2)"></span>
                             </div>
 
                         </div>
@@ -480,8 +480,9 @@
                                 this.currentStatuses.push(status);
                             }
 
-                            const url = `{{ route('orders.update.status', '__orderId__') }}`.replace(
-                                '__orderId__', this.order.id);
+                            const url = `{{ route('admin.orders.update.status', '__orderId__') }}`
+                                .replace(
+                                    '__orderId__', this.order.id);
 
                             const response = await axios.put(url, {
                                 statuses: this.currentStatuses,
@@ -508,8 +509,9 @@
                         }
 
                         try {
-                            const url = `{{ route('orders.update.payment', '__orderId__') }}`.replace(
-                                '__orderId__', this.order.id);
+                            const url = `{{ route('admin.orders.update.payment', '__orderId__') }}`
+                                .replace(
+                                    '__orderId__', this.order.id);
 
                             const response = await axios.delete(url, {
                                 payment_status: this.paymentStatus,
@@ -537,7 +539,7 @@
                         }
 
                         try {
-                            const url = `{{ route('orders.destroy', '__orderId__') }}`.replace(
+                            const url = `{{ route('admin.orders.destroy', '__orderId__') }}`.replace(
                                 '__orderId__', this.order.id);
 
                             const response = await axios.delete(url);
@@ -549,7 +551,7 @@
                                     duration: 4000,
                                 });
 
-                                window.location.assign("{{ route('orders.index') }}");
+                                window.location.assign("{{ route('admin.orders.index') }}");
                             }
 
 
@@ -564,7 +566,7 @@
                         }
 
                         try {
-                            const url = `{{ route('orders.cancel', '__orderId__') }}`.replace(
+                            const url = `{{ route('admin.orders.cancel', '__orderId__') }}`.replace(
                                 '__orderId__', this.order.id);
 
                             const response = await axios.put(url);

@@ -1,5 +1,5 @@
 <nav x-cloak
-    class="fixed left-0 z-20 flex h-svh w-60 shrink-0 flex-col border-r border-slate-300 bg-white p-4 transition-transform duration-300 md:w-64 md:translate-x-0 md:relative dark:border-slate-700 dark:bg-slate-700"
+    class="fixed left-0 z-20 flex h-svh w-60 shrink-0 flex-col border-r border-slate-300 bg-white p-4 transition-transform duration-300 md:w-64 md:translate-x-0 md:relative dark:border-slate-700 dark:bg-slate-800"
     :class="showSidebar ? 'translate-x-0' : '-translate-x-60'">
     {{-- Logo --}}
     <a href="#" class="ml-2 w-fit text-2xl font-bold text-black dark:text-white">
@@ -39,7 +39,7 @@
             <span>Dashboard</span>
         </x-sidebar-link>
 
-        <div x-data="{ isExpanded: @js(request()->routeIs('products.*', 'categories.*') ? true : false) }" class="flex flex-col">
+        <div x-data="{ isExpanded: @js(request()->routeIs('admin.products.*', 'admin.categories.*') ? true : false) }" class="flex flex-col">
             <button type="button" @click="isExpanded = ! isExpanded"
                 class="flex items-center justify-between gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 ">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 shrink-0"
@@ -61,7 +61,7 @@
             {{-- dropdown --}}
             <ul x-cloak x-collapse x-show="isExpanded">
                 <li class="px-1 py-0.5 first:mt-2">
-                    <x-sidebar-link :active="request()->routeIs('products.*')" :href="route('products.index')">
+                    <x-sidebar-link :active="request()->routeIs('admin.products.*')" :href="route('admin.products.index')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle size-2 shrink-0"
                             viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -71,7 +71,7 @@
                 </li>
 
                 <li class="px-1 py-0.5 first:mt-2">
-                    <x-sidebar-link :active="request()->routeIs('categories.*')" :href="route('categories.index')">
+                    <x-sidebar-link :active="request()->routeIs('admin.categories.*')" :href="route('admin.categories.index')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle size-2 shrink-0"
                             viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -83,7 +83,7 @@
             </ul>
         </div>
 
-        <x-sidebar-link :active="request()->routeIs('orders.*')" :href="route('orders.index')">
+        <x-sidebar-link :active="request()->routeIs('admin.orders.*')" :href="route('admin.orders.index')">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5 shrink-0"
                 aria-hidden="true">
                 <path
@@ -94,7 +94,7 @@
             <span>Orders</span>
         </x-sidebar-link>
 
-        <x-sidebar-link :active="request()->routeIs('customers.*')" :href="route('customers.index')">
+        <x-sidebar-link :active="request()->routeIs('admin.customers.*')" :href="route('admin.customers.index')">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people-fill size-5 shrink-0"
                 viewBox="0 0 16 16">
                 <path
@@ -103,7 +103,7 @@
             <span>Customers</span>
         </x-sidebar-link>
 
-        <div x-data="{ isExpanded: @js(request()->routeIs('roles.*', 'permissions.*') ? true : false) }" class="flex flex-col">
+        <div x-data="{ isExpanded: @js(request()->routeIs('admin.roles.*', 'admin.permissions.*') ? true : false) }" class="flex flex-col">
             <button type="button" @click="isExpanded = ! isExpanded"
                 class="flex items-center justify-between gap-2 px-2 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 ">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-gear-fill size-5 shrink-0"
@@ -125,7 +125,7 @@
             {{-- dropdown --}}
             <ul x-cloak x-collapse x-show="isExpanded">
                 <li class="px-1 py-0.5 first:mt-2">
-                    <x-sidebar-link :active="request()->routeIs('roles.*')" :href="route('roles.index')">
+                    <x-sidebar-link :active="request()->routeIs('admin.roles.*')" :href="route('admin.roles.index')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle size-2 shrink-0"
                             viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -135,7 +135,7 @@
                 </li>
 
                 <li class="px-1 py-0.5 first:mt-2">
-                    <x-sidebar-link :active="request()->routeIs('permissions.*')" :href="route('permissions.index')">
+                    <x-sidebar-link :active="request()->routeIs('admin.permissions.*')" :href="route('admin.permissions.index')">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-circle size-2 shrink-0"
                             viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />

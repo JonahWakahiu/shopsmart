@@ -4,17 +4,9 @@
     <div x-data="productsManagement" class="py-12">
 
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-
-
             <h6 class="font-semibold text-2xl text-black dark:text-white mb-4">Products</h6>
-        </div>
 
-        {{-- products list --}}
-        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white">
-            <p class="pt-4 font-medium text-lg">Filter</p>
-
-            <div class="py-4 grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
                     <x-select-input class="w-full capitalize" x-model="filterByStatus" @change="getProducts">
                         <option value="" selected>Selected</option>
@@ -43,12 +35,12 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-between py-4 border-b border-slate-300">
+            <div class="flex items-center justify-between py-4">
 
-                <x-search-input x-model="q" />
+                <x-search-input x-model="q" class="min-w-[250px]" />
 
                 <div>
-                    <a href="{{ route('products.create') }}"
+                    <a href="{{ route('admin.products.create') }}"
                         class="flex items-center gap-2 text-sm bg-blue-500 hover:bg-blue-500/80 px-5 py-1.5 rounded-md text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-plus size-5 shrink-0"
                             viewBox="0 0 16 16">
@@ -58,8 +50,13 @@
                         <span>Add Product</span></a>
                 </div>
             </div>
+        </div>
 
-            <div class="overflow-x-hidden hover:overflow-x-auto  custom-scrollbar ">
+        {{-- products list --}}
+        <div class="w-full sm:px-6 lg:px-8 border-y border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800">
+
+            <div
+                class="overflow-x-hidden hover:overflow-x-auto border-b-[10px] border-transparent hover:border-none transition-transform duration-300  custom-scrollbar ">
                 <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
                     <thead class="border-b border-slate-300 dark:border-slate-700 text-black dark:text-white">
                         <tr>
@@ -79,7 +76,7 @@
 
                             <tr>
                                 <td class="p-3 whitespace-nowrap min-w-[250px]">
-                                    <a :href="`{{ route('products.show', ':id') }}`.replace(':id', product.id)"
+                                    <a :href="`{{ route('admin.products.show', ':id') }}`.replace(':id', product.id)"
                                         class="flex items-center gap-2.5 min-w-fit">
                                         <img :src="product.oldest_image.url" alt="product.name"
                                             class="size-11 rounded-md object-center object-cover shrink-0">
@@ -121,7 +118,7 @@
                                 </td>
                                 <td class="p-3">
                                     <div class="flex items-center gap-4 flex-shrink-0">
-                                        <a :href="`{{ route('products.edit', ':id') }}`.replace(':id', product.id)"
+                                        <a :href="`{{ route('admin.products.edit', ':id') }}`.replace(':id', product.id)"
                                             class="inline-block">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke-width="1.5" stroke="currentColor" class="size-5 text-sky-500">
@@ -296,7 +293,7 @@
                             try {
                                 this.isLoading = true;
 
-                                const response = await axios.get('{{ route('products.list') }}', {
+                                const response = await axios.get('{{ route('admin.products.list') }}', {
                                     params: {
                                         rowsPerPage: this.rowsPerPage,
                                         page: this.currentPage,
@@ -329,7 +326,7 @@
                         async updateProductStock(id, event) {
                             try {
                                 const response = await axios.put(
-                                    `{{ route('products.update.stock', ':id') }}`
+                                    `{{ route('admin.products.update.stock', ':id') }}`
                                     .replace(':id', id), {
                                         stock: event.target.checked,
                                     });
@@ -360,7 +357,8 @@
                             }
 
                             try {
-                                const response = await axios.delete(`{{ route('products.destroy', ':id') }}`
+                                const response = await axios.delete(
+                                    `{{ route('admin.products.destroy', ':id') }}`
                                     .replace(':id', id));
 
                                 if (response.status === 200) {

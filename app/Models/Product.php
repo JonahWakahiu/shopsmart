@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,11 @@ class Product extends Model
 {
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'status',
+        'published_on',
+    ];
 
     // relationships
     public function category(): BelongsTo
@@ -39,7 +45,14 @@ class Product extends Model
     public function orders(): BelongsToMany
     {
         return $this->belongsToMany(Order::class)
-            ->withPivot('quantity', 'price_at_order', 'discount_at_order', 'price_total', 'discount_total')
+            ->withPivot(
+                'quantity',
+                'price_at_order',
+                'discount_at_order',
+                'price_total',
+                'discount_total',
+                'variation_id',
+            )
             ->using(OrderProduct::class)
             ->withTimestamps();
     }
@@ -59,12 +72,12 @@ class Product extends Model
             set: fn(string $value) => match ($value) {
                 'publish' => 'published',
                 'shedule' => 'sheduled',
-                default => $value,
+                'inactive' => 'inactive',
             },
             get: fn(string $value) => match ($value) {
                 'published' => 'publish',
                 'sheduled' => 'shedule',
-                default => $value,
+                'inactive' => 'inactive',
             }
         );
     }
@@ -77,4 +90,11 @@ class Product extends Model
             }
         });
     }
+
+    // scope
+    public function scopePublished(Builder $query)
+    {
+        $query->where('status', 'published');
+    }
+
 }

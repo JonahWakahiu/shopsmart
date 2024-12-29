@@ -36,10 +36,6 @@ class OrderFactory extends Factory
                     'quantity' => rand(1, 5),
                 ]);
             }
-
-            $order->statuses()->create([
-                'status' => 'pending',
-            ]);
         });
     }
 }

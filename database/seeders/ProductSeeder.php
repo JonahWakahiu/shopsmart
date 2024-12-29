@@ -20,16 +20,17 @@ class ProductSeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => "Men's Clothing", 'slug' => 'mens-clothing'],
-            ['name' => "Women's Clothing", 'slug' => 'womens-clothing'],
-            ['name' => "Mobile Phones", 'slug' => 'mobile-phones'],
-            ['name' => "Furniture", 'slug' => 'furniture'],
-            ['name' => "Skincare", 'slug' => 'skincare'],
-            ['name' => "Sports Equipment", 'slug' => 'sports-equipment'],
+            ['name' => "Phones & Tablets", 'slug' => 'mobile-phones'],
+            ['name' => "TVS & Audio", 'slug' => 'tvs-audio'],
+            ['name' => "Appliances", 'slug' => 'home-appliances'],
+            ['name' => "Health & Beauty", 'slug' => 'skincare'],
+            ['name' => "Home & Office", 'slug' => 'furniture'],
+            ['name' => "Fashion", 'slug' => 'fashion'],
+            ['name' => "Computing", 'slug' => 'computing'],
+            ['name' => "Supermarket", 'slug' => 'groceries'],
             ['name' => "Baby Products", 'slug' => 'baby-products'],
-            ['name' => "Pet Supplies", 'slug' => 'pet-supplies'],
-            ['name' => "Books", 'slug' => 'books'],
-            ['name' => "Electronics", 'slug' => 'electronics'],
+            ['name' => "Sporting Categories", 'slug' => 'sports-equipment'],
+            ['name' => 'Others', 'slug' => 'others'],
         ];
 
         foreach ($categories as $category) {
@@ -48,7 +49,7 @@ class ProductSeeder extends Seeder
             ->create();
 
         Product::factory()
-            ->count(20)
+            ->count(50)
             ->has(ProductImages::factory()->count(rand(2, 5)), 'images')
             ->has(ProductVariations::factory()->count(rand(2, 5)), 'variations')
             ->create();
@@ -61,7 +62,7 @@ class ProductSeeder extends Seeder
             ->create();
 
         Order::factory()
-            ->count(30)
+            ->count(5)
             ->withProducts()
             ->has(Payment::factory())
             ->create();

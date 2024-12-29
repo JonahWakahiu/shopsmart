@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 10, 2);
+            $table->decimal('amount', 10, 2)->nullable();
             $table->enum('status', ['pending', 'completed', 'failed', 'refunded']);
-            $table->string('payment_method');
+            $table->string('payment_method')->nullable();
             $table->string('transaction_id')->nullable();
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->timestamps();

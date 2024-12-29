@@ -94,11 +94,11 @@
                                     </template>
                                     <template x-if="product.status == 'publish'">
                                         <span
-                                            class="px-5 py-1.5 rounded capitalize bg-green-100 text-green-700">Inactive</span>
+                                            class="px-5 py-1.5 rounded capitalize bg-green-100 text-green-700">Published</span>
                                     </template>
                                     <template x-if="product.status == 'shedule'">
                                         <span
-                                            class="px-5 py-1.5 rounded capitalize bg-sky-100 text-sky-700">Inactive</span>
+                                            class="px-5 py-1.5 rounded capitalize bg-sky-100 text-sky-700">Shedule</span>
                                     </template>
                                 </td>
                                 <td class="p-3 whitespace-nowrap">

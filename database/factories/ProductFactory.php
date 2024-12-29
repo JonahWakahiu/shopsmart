@@ -27,7 +27,7 @@ class ProductFactory extends Factory
             'description' => $this->generateRandomHtml(),
             'price' => fake()->randomFloat(2, 10, 500),
             'discount' => null,
-            'status' => fake()->randomElement(['sheduled', 'published', 'inactive']),
+            'status' => fake()->randomElement(['shedule', 'publish', 'inactive']),
             'stock_quantity' => fake()->numberBetween(0, 100),
             'sku' => strtoupper(Str::random(8)),
             'is_top_deal' => fake()->boolean(50),
@@ -76,7 +76,7 @@ class ProductFactory extends Factory
         return $this->afterCreating(function (Product $product) {
 
             if ($product->status === 'shedule') {
-                $product->published_on = fake()->dateTimeBetween('+1 day', '+1 month');
+                $product->published_on = fake()->dateTimeBetween('+1 day', '1 week');
                 $product->save();
             }
         });

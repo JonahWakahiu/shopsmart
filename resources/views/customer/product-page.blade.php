@@ -1,4 +1,4 @@
-<x-index-layout>
+<x-customer-layout>
     <div class="py-12" x-data="viewProduct">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <h6 class="font-semibold text-2xl text-black dark:text-white mb-4">Product Page</h6>
@@ -267,7 +267,7 @@
                             decreaseVariationQuantity() {
                                 if (this.userSelectedQuantity > 0) {
                                     this.userSelectedQuantity--;
-                                    this.$store.cart.removeProduct(product.id, variation.id, variation.value);
+                                    this.$store.cart.removeProduct(product.id, variation.id);
                                 }
                             },
                         

@@ -12,7 +12,7 @@
         </div>
 
         {{-- table --}}
-        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white">
+        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white dark:bg-slate-800">
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">

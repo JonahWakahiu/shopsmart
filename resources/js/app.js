@@ -23,7 +23,6 @@ Alpine.plugin(persist);
 
 
 document.addEventListener('alpine:init', () => {
-
     Alpine.store('cart', {
         products: Alpine.$persist([]).as('cart-products'),
 
@@ -31,18 +30,24 @@ document.addEventListener('alpine:init', () => {
             return this.products.reduce((total, product) => total + product.userSelectedQuantity, 0);
         },
 
+        get subTotal() {
+            const subTotal = this.products.reduce((total, product) => total + (product.price * product.userSelectedQuantity), 0);
+            return subTotal.toFixed(2);
+        },
+
+        get totalDiscount() {
+            const discount = this.products.reduce((total, product) => total + (product.discount * product.userSelectedQuantity), 0);
+            return -discount.toFixed(2);
+        },
+
         get total() {
-            const total = this.products.reduce((total, product) => total + (product.price - product.discount) * product.userSelectedQuantity, 0);
+            const total = this.products.reduce((total, product) => total + ((product.price - product.discount) * product.userSelectedQuantity), 0);
             return total.toFixed(2);
         },
 
 
-        get totalDiscount() {
-            return this.products.reduce((total, product) => total + product.discount * product.userSelectedQuantity, 0);
-        },
-
         addProduct(product) {
-            const productKey = `${product.id}-${product.variation_id || ''}-${product.variation_value || ''}`;
+            const productKey = `${product.id}-${product.variation_id || ''}`;
 
 
             const existingProduct = this.products.find(item => item.product_key === productKey);
@@ -62,8 +67,8 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        increaseUserSelectedQuantity(productId, variationId = '', variationValue = '') {
-            const productKey = `${productId}-${variationId}-${variationValue}`;
+        increaseUserSelectedQuantity(productId, variationId = '') {
+            const productKey = `${productId}-${variationId}`;
 
             const existingProduct = this.products.find(item => item.product_key === productKey);
             if (existingProduct && existingProduct.userSelectedQuantity < existingProduct.stock_quantity) {
@@ -72,8 +77,8 @@ document.addEventListener('alpine:init', () => {
             this.dispatchEvent('notify', { message: 'Product quantity updated in the cart!', type: 'success', duration: 4000 });
         },
 
-        decreaseUserSelectedQuantity(productId, variationId = '', variationValue = '') {
-            const productKey = `${productId}-${variationId}-${variationValue}`;
+        decreaseUserSelectedQuantity(productId, variationId = '') {
+            const productKey = `${productId}-${variationId}`;
 
             const existingProduct = this.products.find(item => item.product_key === productKey);
             if (existingProduct && existingProduct.userSelectedQuantity > 1) {
@@ -82,8 +87,8 @@ document.addEventListener('alpine:init', () => {
             this.dispatchEvent('notify', { message: 'Product quantity updated in the cart!', type: 'success', duration: 4000 });
         },
 
-        removeProduct(productId, variationId = '', variationValue = '') {
-            const productKey = `${productId}-${variationId}-${variationValue}`;
+        removeProduct(productId, variationId = '') {
+            const productKey = `${productId}-${variationId}`;
 
             const existingProduct = this.products.find(item => item.product_key === productKey);
 

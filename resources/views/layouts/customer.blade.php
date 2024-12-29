@@ -24,6 +24,7 @@
     <x-notification-system />
 
     @stack('scripts')
+    <x-footer />
 </body>
 
 </html>

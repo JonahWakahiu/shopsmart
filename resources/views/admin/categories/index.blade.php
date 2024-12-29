@@ -23,7 +23,7 @@
         </div>
 
         {{-- table --}}
-        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white">
+        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white dark:bg-slate-800">
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
@@ -195,10 +195,10 @@
             <div x-show="modalIsOpen"
                 x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
                 x-transition:enter-start="scale-0" x-transition:enter-end="scale-100"
-                class="w-full p-7 max-w-lg rounded-xl border border-slate-300 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 relative">
+                class="w-full p-7 max-w-lg rounded-xl border border-slate-300 bg-white  text-slate-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300 relative">
 
                 <button
-                    class="absolute right-0 top-0 -translate-y-1/2 bg-slate-100 dark:bg-slate-800 shadow-md translate-x-1/2 p-1.5 rounded-md"
+                    class="absolute right-0 top-0 -translate-y-1/2 bg-slate-100 dark:bg-slate-700 shadow-md translate-x-1/2 p-1.5 rounded-md"
                     @click="closeModal">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"
                         stroke="currentColor" fill="none" stroke-width="1.4" class="w-5 h-5">

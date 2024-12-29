@@ -167,7 +167,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-6 gap-7 mt-5">
                 <div class="md:col-span-4 space-y-7">
-                    <div class=" bg-white rounded-md p-5">
+                    <div class=" bg-white dark:bg-slate-800 rounded-md p-5">
                         <p class="text-xl font-semibold">Order Details</p>
 
                         <div class="overflow-x-auto mt-5">
@@ -212,7 +212,7 @@
                         </div>
                     </div>
 
-                    <div class=" bg-white rounded-md p-5 space-y-4">
+                    <div class=" bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                         <div class="flex items-center justify-between">
                             <p class="text-xl font-semibold">Track Order</p>
 
@@ -234,12 +234,12 @@
                                     class="absolute z-50 mt-2 w-48 rounded-md shadow-lg ltr:origin-top-right rtl:origin-top-left end-0"
                                     style="display: none;">
                                     <div
-                                        class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-gray-700">
-                                        <p class="px-3 text-black mb-1 font-semibold">Statuses</p>
+                                        class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-slate-800">
+                                        <p class="px-3 text-black dark:text-white mb-1 font-semibold">Statuses</p>
                                         {{--  --}}
                                         <template x-for="(status, index) in orderStatuses">
                                             <x-input-label ::for="status"
-                                                class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 cursor-pointer">
+                                                class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-600 cursor-pointer">
                                                 <span class="capitalize" x-text="status"></span>
 
                                                 <x-checkbox-input ::id="status" ::value="status"
@@ -333,8 +333,9 @@
                                             }"
                                             x-text="status"></span>
 
-                                        <span class="ms-auto"
-                                            x-text="new Date(order.statuses.find(item => item.status === status).created_at).toLocaleString('en-US', {
+                                        <template x-if="order.statuses.find(item => item.status === status)">
+                                            <span class="ms-auto"
+                                                x-text="new Date(order.statuses.find(item => item.status === status).created_at).toLocaleString('en-US', {
                                                 month: 'short',
                                                 day: 'numeric',
                                                 year: 'numeric',
@@ -342,13 +343,13 @@
                                                 minute: '2-digit',
                                                 hour12: true
                                                 })"></span>
+                                        </template>
 
-                                        <template
-                                            x-if="order.statuses.find(item => item.status === status).changed_by">
+                                        <template x-if="order.statuses.find(item => item.status === status)">
                                             <div class="absolute top-full mt-2 left-7 whitespace-nowrap">
                                                 <span>Changed By:</span>
                                                 <span
-                                                    x-text="order.statuses.find(item => item.status === status).changed_by.name"></span>
+                                                    x-text="order.statuses.find(item => item.status === status)?.changed_by?.name"></span>
                                             </div>
                                         </template>
                                     </div>
@@ -359,7 +360,7 @@
                 </div>
 
                 <div class="md:col-span-2 space-y-7">
-                    <div class=" bg-white rounded-md p-5">
+                    <div class=" bg-white dark:bg-slate-800 rounded-md p-5">
                         <p class="text-xl font-semibold">Summary</p>
 
                         <div class="space-y-3 mt-3">
@@ -388,7 +389,7 @@
                         </div>
                     </div>
 
-                    <div class=" bg-white rounded-md p-5 space-y-4">
+                    <div class=" bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                         <p class="text-xl font-semibold">Customer details</p>
 
                         <div class="flex w-max items-center gap-2">
@@ -428,7 +429,7 @@
                         </div>
                     </div>
 
-                    <div class=" bg-white rounded-md p-5 space-y-4">
+                    <div class=" bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                         <p class="text-xl font-semibold">Order Status</p>
 
                         <div>

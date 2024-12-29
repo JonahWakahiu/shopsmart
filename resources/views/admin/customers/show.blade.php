@@ -7,11 +7,11 @@
 
             <div class="grid grid-cols-3 gap-7">
                 <div class="col-span-1">
-                    <div class="bg-white rounded-md p-5">
+                    <div class="bg-white dark:bg-slate-800 rounded-md p-5">
                         <div class="flex flex-col items-center gap-1.5">
                             <img :src="customer.avatar" :alt="customer.name" class="size-32 rounded-full">
-                            <p class="text-xl font-semibold text-slate-700" x-text="customer.name"></p>
-                            <p class="text-slate-600" x-text="customer.email"></p>
+                            <p class="text-xl font-semibold" x-text="customer.name"></p>
+                            <p class="text-slate-600 dark:text-slate-400" x-text="customer.email"></p>
                         </div>
                         <div class="grid grid-cols-2 mt-5">
                             <div class="flex items-center gap-3">
@@ -25,7 +25,7 @@
                                 <div>
                                     <p class="font-semibold text-lg"
                                         x-text="customer.orders_count ? customer.orders_count : 0.00"></p>
-                                    <p class="text-slate-700 font-medium">Orders</p>
+                                    <p class="font-medium">Orders</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
@@ -40,24 +40,27 @@
                                 <div>
                                     <p class="font-semibold text-lg"
                                         x-text="customer.total_spent ? customer.total_spent : 0.00"></p>
-                                    <p class="text-slate-700 font-medium">Spent</p>
+                                    <p class="font-medium">Spent</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mt-5 space-y-2">
-                            <p class="font-semibold text-slate-700">Details</p>
+                            <p class="font-semibold">Details</p>
                             <div class="border-b border-dashed border-slate-300"></div>
 
-                            <p class="font-semibold text-slate-700">Username: <span class="text-slate-600 font-medium"
+                            <p class="font-semibold">Username: <span
+                                    class="text-slate-600 dark:text-slate-400 font-medium"
                                     x-text="customer.name"></span></p>
-                            <p class="font-semibold text-slate-700">Email: <span class="text-slate-600 font-medium"
+                            <p class="font-semibold">Email: <span class="text-slate-600 dark:text-slate-400 font-medium"
                                     x-text="customer.email"></span></p>
-                            <p class="font-semibold text-slate-700">Status: <span class="text-slate-600 font-medium"
+                            <p class="font-semibold">Status: <span
+                                    class="text-slate-600 dark:text-slate-400 font-medium"
                                     x-text="customer.status"></span></p>
-                            <p class="font-semibold text-slate-700">Contact: <span class="text-slate-600 font-medium"
+                            <p class="font-semibold">Contact: <span
+                                    class="text-slate-600 dark:text-slate-400 font-medium"
                                     x-text="customer.phone_number"></span></p>
-                            <p class="font-semibold text-slate-700">City: <span class="text-slate-600 font-medium"
+                            <p class="font-semibold">City: <span class="text-slate-600 dark:text-slate-400 font-medium"
                                     x-text="customer.city"></span></p>
 
                         </div>
@@ -66,7 +69,7 @@
 
 
                 <div class="col-span-2">
-                    <div class="bg-white p-5 rounded-md">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-md">
                         <div class="flex items-center justify-between mb-4">
 
                             <h6 class="font-semibold text-2xl text-black dark:text-white">Orders</h6>

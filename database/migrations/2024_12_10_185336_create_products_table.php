@@ -19,9 +19,9 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->decimal('discount', 10, 2)->nullable();
             $table->boolean('change_tax')->default(true);
-            $table->enum('status', ['sheduled', 'published', 'inactive']);
             $table->integer('stock_quantity');
             $table->string('sku')->unique();
+            $table->enum('status', ['sheduled', 'published', 'inactive']);
             $table->dateTime('published_on')->nullable();
             $table->boolean('is_top_deal')->default(false);
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();

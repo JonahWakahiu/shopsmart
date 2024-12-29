@@ -10,7 +10,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
                 <template x-for="role in roles" :key="role.id">
-                    <div class="bg-white rounded-md shadow-md p-5">
+                    <div class="bg-white dark:bg-slate-800 rounded-md shadow-md p-5">
                         <div class="flex items-center justify-between">
                             <div>Total <span x-text="role.users_count"></span> users</div>
 
@@ -86,7 +86,7 @@
             </div>
 
         </div>
-        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white">
+        <div class="w-full border-y border-slate-300 dark:border-slate-700 m:px-6 lg:px-8 bg-white dark:bg-slate-800">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-700 dark:text-slate-300">
                     <thead class="border-b border-slate-300 dark:border-slate-700 text-black dark:text-white">
@@ -190,15 +190,16 @@
                                                 x-transition:leave="transition ease-in duration-75"
                                                 x-transition:leave-start="opacity-100 scale-100"
                                                 x-transition:leave-end="opacity-0 scale-95"
-                                                class="absolute z-50 mt-2 w-48 rounded-md shadow-lg ltr:origin-top-right rtl:origin-top-left end-0"
+                                                class="absolute z-50 mt-2 w-48 rounded-md border border-slate-300 dark:border-slate-700 shadow-lg ltr:origin-top-right rtl:origin-top-left end-0"
                                                 style="display: none;">
                                                 <div
-                                                    class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-gray-700">
-                                                    <p class="px-3 text-black mb-1 font-semibold">Roles</p>
+                                                    class="rounded-md ring-1 ring-black ring-opacity-5 py-1 bg-white dark:bg-slate-800">
+                                                    <p class="px-3 text-black dark:text-white mb-1 font-semibold">Roles
+                                                    </p>
                                                     {{--  --}}
                                                     <template x-for="role in ['admin', 'moderator', 'customer']">
                                                         <x-input-label ::for="role"
-                                                            class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 cursor-pointer">
+                                                            class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                                                             <span class="capitalize" x-text="role"></span>
 
                                                             <x-checkbox-input ::id="role" ::value="role"
@@ -207,11 +208,13 @@
                                                         </x-input-label>
                                                     </template>
 
-                                                    <p class="px-3 text-black mb-1 mt-1.5 font-semibold">Status</p>
+                                                    <p
+                                                        class="px-3 text-black dark:text-white mb-1 mt-1.5 font-semibold">
+                                                        Status</p>
 
                                                     <template x-for="status in ['active', 'inactive']">
                                                         <x-input-label ::for="status"
-                                                            class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 cursor-pointer">
+                                                            class="flex items-center justify-between px-4 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                                                             <span class="capitalize" x-text="status"></span>
 
                                                             <x-radio-input ::id="status" ::value="status"
@@ -360,7 +363,7 @@
             <div x-show="editRoleModal"
                 x-transition:enter="transition ease-out duration-200 delay-100 motion-reduce:transition-opacity"
                 x-transition:enter-start="opacity-0 scale-50" x-transition:enter-end="opacity-100 scale-100"
-                class="relative w-full max-w-xl mt-20 space-y-5  rounded-xl border border-slate-300 bg-white text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 p-10">
+                class="relative w-full max-w-xl mt-20 space-y-5  rounded-xl border border-slate-300 bg-white dark:bg-slate-800 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 p-10">
 
                 <button
                     class="absolute right-0 top-0 -translate-y-1/2 bg-slate-100 dark:bg-slate-800 shadow-md translate-x-1/2 p-1.5 rounded-md"

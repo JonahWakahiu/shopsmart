@@ -100,7 +100,7 @@
                         </div>
 
                         {{-- product images --}}
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <div class="flex items-center justify-between">
                                 <p class="text-xl font-medium">Product Image</p>
 
@@ -205,18 +205,19 @@
 
                         <!-- end of product images -->
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Variants</p>
 
                             <template x-for="(variation, index) in product.variations" :key="index">
-                                <div class="space-y-4 border rounded-lg p-4 bg-slate-50">
+                                <div
+                                    class="space-y-4 border rounded-lg p-4 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <input type="hidden" :name="'variations[' + index + '][variation_id]'"
                                             :value="variation.id">
 
                                         <div>
                                             <x-input-label ::for="'variations[' + index + '][variation_type]'" :value="_('Variation Type')" />
-                                            <x-text-input ::name="'variations[' + index + '][variation_type]'" ::value="variation.variation_type" ::id="'variations[' + index + '][variation_type]'"
+                                            <x-text-input ::name="'variations[' + index + '][variation_type]'" ::value="variation.type" ::id="'variations[' + index + '][variation_type]'"
                                                 placeholder="e.g., Size" class="w-full" />
 
                                             <template x-if="errors[`variations.${index}.variation_type`]">
@@ -230,7 +231,7 @@
 
                                         <div>
                                             <x-input-label ::for="'variations[' + index + '][variation_value]'" :value="_('Variation Value')" />
-                                            <x-text-input ::name="'variations[' + index + '][variation_value]'" ::value="variation.variation_value" ::id="'variations[' + index + '][variation_value]'"
+                                            <x-text-input ::name="'variations[' + index + '][variation_value]'" ::value="variation.value" ::id="'variations[' + index + '][variation_value]'"
                                                 placeholder="e.g., Medium" class="w-full" />
 
                                             <template x-if="errors[`variations.${index}.variation_value`]">
@@ -245,7 +246,7 @@
 
                                         <div>
                                             <x-input-label ::for="'variations[' + index + '][variation_price]'" :value="_('Variation Price')" />
-                                            <x-text-input ::name="'variations[' + index + '][variation_price]'" ::value="variation.variation_price" ::id="'variations[' + index + '][variation_price]'"
+                                            <x-text-input ::name="'variations[' + index + '][variation_price]'" ::value="variation.price" ::id="'variations[' + index + '][variation_price]'"
                                                 placeholder="e.g., 15.99" class="w-full" />
 
                                             <template x-if="errors[`variations.${index}.variation_price`]">
@@ -260,7 +261,7 @@
 
                                         <div>
                                             <x-input-label ::for="'variations[' + index + '][variation_stock_quantity]'" :value="_('Variation Stock Quantity')" />
-                                            <x-text-input ::name="'variations[' + index + '][variation_stock_quantity]'" ::value="variation.variation_stock_quantity" ::id="'variations[' + index + '][variation_stock_quantity]'"
+                                            <x-text-input ::name="'variations[' + index + '][variation_stock_quantity]'" ::value="variation.stock_quantity" ::id="'variations[' + index + '][variation_stock_quantity]'"
                                                 placeholder="e.g., 100" class="w-full" />
 
                                             <template x-if="errors[`variations.${index}.variation_stock_quantity`]">
@@ -288,7 +289,7 @@
                         </div>
 
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Inventory</p>
 
                             <div class="grid grid-cols-3 divide-x divide-slate-300">
@@ -305,7 +306,7 @@
                                     </button>
                                 </div>
                                 <div class="col-span-2 px-5">
-                                    <p class="text-sm text-slate-700">Options</p>
+                                    <p class="text-sm">Options</p>
 
                                     <div class="mt-4">
                                         <x-input-label for="stock_quantity" :value="_('Add to Stock')" />
@@ -329,7 +330,7 @@
 
                     <div class="md:col-span-2 space-y-10">
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Pricing</p>
 
                             <div>
@@ -369,7 +370,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Organize</p>
 
                             <div>

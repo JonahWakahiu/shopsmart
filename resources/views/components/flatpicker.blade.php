@@ -12,9 +12,11 @@
 
                     flatpickr(".flatpicker", {
                         enableTime: true,
-                        minDate: tomorrow,
-                        dateFormat: 'Y-m-d h:s',
-                        defaultDate: tomorrow,
+                        enableSeconds: true,
+                        minuteIncrement: 1,
+
+                        time_24hr: true,
+
                     })
                 }
             }))

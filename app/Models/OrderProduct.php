@@ -18,6 +18,7 @@ class OrderProduct extends Pivot
                 $pivot->price_total = $pivot->quantity * $pivot->price_at_order;
                 $pivot->discount_total = $pivot->quantity * $pivot->discount_at_order;
             }
+
         });
 
         static::saved(function ($pivot) {

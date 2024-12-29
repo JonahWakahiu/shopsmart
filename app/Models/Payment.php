@@ -11,6 +11,13 @@ class Payment extends Model
     /** @use HasFactory<\Database\Factories\PaymentFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'status',
+        'transaction_id',
+        'amount',
+        'payment_method',
+    ];
+
     // relationships
     public function order(): BelongsTo
     {

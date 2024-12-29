@@ -1,0 +1,290 @@
+<x-app-layout>
+    <div class="py-12" x-data="ordersManagement">
+
+        <div class="bg-white rounded-md w-full">
+            <div class="px-3 py-2 border-b border-slate-300 dark:border-slate-700">
+                <p class="text-lg font-medium text-black dark:text-white">Orders</p>
+            </div>
+
+            <div class="w-full pt-5 px-5">
+                <div class="flex gap-2 overflow-x-auto border-b border-slate-300 dark:border-slate-700">
+                    <button type="button" @click="selectedTab = 'ongoing/delivered'"
+                        :class="selectedTab === 'ongoing/delivered' ?
+                            'font-bold text-blue-700 border-b-2 border-blue-700 dark:border-blue-600 dark:text-blue-600' :
+                            'text-slate-700 font-medium dark:text-slate-300 dark:hover:border-b-slate-300 dark:hover:text-white hover:border-b-2 hover:border-b-slate-800 hover:text-black'"
+                        class="h-min px-4 py-2 text-sm">ONGOING/DELIVERED</button>
+
+                    <button type="button" @click="selectedTab = 'cancelled/returned'"
+                        :class="selectedTab === 'cancelled/returned' ?
+                            'font-bold text-blue-700 border-b-2 border-blue-700 dark:border-blue-600 dark:text-blue-600' :
+                            'text-slate-700 font-medium dark:text-slate-300 dark:hover:border-b-slate-300 dark:hover:text-white hover:border-b-2 hover:border-b-slate-800 hover:text-black'"
+                        class="h-min px-4 py-2 text-sm">CANCELLED/RETURNED</button>
+                </div>
+
+                <div class="py-4 text-slate-700 dark:text-slate-300">
+                    <div x-cloak x-show="selectedTab == 'ongoing/delivered'">
+
+                        <div class="flex flex-col gap-5">
+                            <template x-for="order in ongoingOrders" :key="order.id">
+                                <div
+                                    class="border border-slate-300 dark:border-slate-700 rounded-md p-5 flex items-start gap-5">
+                                    <div class="size-20 rounded-md overflow-hidden">
+                                        <img :src="order.first_product[0].oldest_image.url"
+                                            :alt="order.first_product[0].name"
+                                            class="w-full h-full object-cever object-center">
+                                    </div>
+
+                                    <div>
+                                        <p x-text="order.first_product[0].name"
+                                            class="font-medium text-black dark:text-white capitalize"></p>
+                                        <p class="text-slate-600 dark:text-slate-400 text-sm">Order: <span
+                                                x-text="order.order_number"></span></p>
+
+                                        <!-- order status -->
+                                        <div class="flex items-center py-1 px-3 rounded-md font-semibold gap-1 max-w-fit capitalize text-xs"
+                                            :class="{
+                                                'bg-orange-100 text-orange-500': order.latest_status.status ==
+                                                    'pending',
+                                                'bg-sky-100 text-sky-500': order.latest_status.status ==
+                                                    'approved',
+                                                'bg-blue-100 text-blue-500': order.latest_status.status == 'processing',
+                                                'bg-fuchsia-100 text-fuchsia-500': order.latest_status.status ==
+                                                    'shipped',
+                                                'bg-green-100 text-green-500': order.latest_status.status ==
+                                                    'delivered',
+                                                'bg-lime-100 text-lime-500': order.latest_status.status == 'completed',
+                                                'bg-red-100 text-red-700': order.latest_status.status == 'cancelled',
+                                            }">
+                                            <span x-text="order.latest_status.status"></span>
+
+                                            <template x-if="order.latest_status.status == 'pending'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-hourglass-bottom size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5m2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'approved'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-check-circle-fill size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'processing'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-gear-wide-connected size-4 " viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'shipped'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-truck size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'delivered'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-box-seam-fill size-4 " viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'completed'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-check2-circle size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+                                                    <path
+                                                        d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'cancelled'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-trash-fill size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                                                </svg>
+                                            </template>
+                                        </div>
+
+                                        <p class="text-sm text-black dark:text-white">On <span
+                                                x-text="new Date(order.created_at).toLocaleString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true
+                                        })"></span>
+                                        </p>
+                                    </div>
+
+                                    <a :href="`{{ route('orders.details', '__order__') }}`.replace('__order__', order.id)"
+                                        class="text-orange-500 text-sm ms-auto">See Details</a>
+                                </div>
+
+                            </template>
+                        </div>
+
+                    </div>
+                    <div x-cloak x-show="selectedTab == 'cancelled/returned'">
+
+                        <div class="flex flex-col gap-5">
+                            <template x-for="order in cancelledOrders" :key="order.id">
+                                <div
+                                    class="border border-slate-300 dark:border-slate-700 rounded-md p-5 flex items-start gap-5">
+                                    <div class="size-20 rounded-md overflow-hidden">
+                                        <img :src="order.first_product[0].oldest_image.url"
+                                            :alt="order.first_product[0].name"
+                                            class="w-full h-full object-cever object-center">
+                                    </div>
+
+                                    <div>
+                                        <p x-text="order.first_product[0].name"
+                                            class="font-medium text-black dark:text-white capitalize"></p>
+                                        <p class="text-slate-600 dark:text-slate-400 text-sm">Order: <span
+                                                x-text="order.order_number"></span></p>
+
+                                        <!-- order status -->
+                                        <div class="flex items-center py-1 px-3 rounded-md font-semibold gap-1 max-w-fit capitalize text-xs"
+                                            :class="{
+                                                'bg-orange-100 text-orange-500': order.latest_status.status ==
+                                                    'pending',
+                                                'bg-sky-100 text-sky-500': order.latest_status.status ==
+                                                    'approved',
+                                                'bg-blue-100 text-blue-500': order.latest_status.status == 'processing',
+                                                'bg-fuchsia-100 text-fuchsia-500': order.latest_status.status ==
+                                                    'shipped',
+                                                'bg-green-100 text-green-500': order.latest_status.status ==
+                                                    'delivered',
+                                                'bg-lime-100 text-lime-500': order.latest_status.status == 'completed',
+                                                'bg-red-100 text-red-700': order.latest_status.status == 'cancelled',
+                                            }">
+                                            <span x-text="order.latest_status.status"></span>
+
+                                            <template x-if="order.latest_status.status == 'pending'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-hourglass-bottom size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2 1.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1h-11a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1-.5-.5m2.5.5v1a3.5 3.5 0 0 0 1.989 3.158c.533.256 1.011.791 1.011 1.491v.702s.18.149.5.149.5-.15.5-.15v-.7c0-.701.478-1.236 1.011-1.492A3.5 3.5 0 0 0 11.5 3V2z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'approved'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-check-circle-fill size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'processing'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-gear-wide-connected size-4 " viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'shipped'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-truck size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'delivered'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-box-seam-fill size-4 " viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.01-.003.268-.108a.75.75 0 0 1 .558 0l.269.108.01.003zM10.404 2 4.25 4.461 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339L8 5.961 5.596 5l6.154-2.461z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'completed'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-check2-circle size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0" />
+                                                    <path
+                                                        d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0z" />
+                                                </svg>
+                                            </template>
+
+                                            <template x-if="order.latest_status.status == 'cancelled'">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                    class="bi bi-trash-fill size-4" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                                                </svg>
+                                            </template>
+                                        </div>
+
+                                        <p class="text-sm text-black dark:text-white">On <span
+                                                x-text="new Date(order.created_at).toLocaleString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                    })"></span>
+                                        </p>
+                                    </div>
+
+                                    <a :href="`{{ route('orders.details', '__order__') }}`.replace('__order__', order.id)"
+                                        class="text-orange-500 text-sm ms-auto">See Details</a>
+                                </div>
+
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('ordersManagement', () => ({
+                    selectedTab: 'ongoing/delivered',
+                    ongoingOrders: {},
+                    cancelledOrders: {},
+
+                    async getOrders() {
+                        try {
+                            const response = await axios.get('{{ route('orders.list') }}');
+
+                            if (response.status === 200) {
+                                this.ongoingOrders = response.data.ongoingOrders.data;
+                                this.cancelledOrders = response.data.cancelledOrders.data;
+
+                                console.log(this.ongoingOrders);
+                                console.log(this.cancelledOrders);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    },
+
+                    init() {
+                        this.getOrders();
+                    }
+                }))
+            })
+        </script>
+    @endpush
+</x-app-layout>

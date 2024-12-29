@@ -23,7 +23,14 @@ class Order extends Model
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class)
-            ->withPivot('quantity', 'price_at_order', 'discount_at_order', 'price_total', 'discount_total')
+            ->withPivot(
+                'quantity',
+                'price_at_order',
+                'discount_at_order',
+                'price_total',
+                'discount_total',
+                'variation_id',
+            )
             ->using(OrderProduct::class)
             ->withTimestamps();
     }
@@ -37,8 +44,30 @@ class Order extends Model
     {
         return $this->hasOne(OrderStatusHistory::class)->latestOfMany();
     }
+
+    public function firstProduct()
+    {
+        return $this->products()->with('oldestImage')->oldest('created_at')->limit(1);
+    }
+
     public function payment(): HasOne
     {
         return $this->hasOne(Payment::class);
+    }
+
+    // event
+    protected static function booted(): void
+    {
+        static::creating(function (Order $order) {
+            if (!$order->order_number) {
+                $order->order_number = fake()->numerify('ORD-######');
+            }
+        });
+
+        static::created(function (Order $order) {
+            $order->statuses()->create([
+                'status' => 'pending',
+            ]);
+        });
     }
 }

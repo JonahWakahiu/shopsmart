@@ -122,7 +122,7 @@
                         </div>
 
                         {{-- product images --}}
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <div class="flex items-center justify-between">
                                 <p class="text-xl font-medium">Product Image</p>
 
@@ -207,11 +207,13 @@
 
                         </div>
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <!-- variations -->
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Variants</p>
 
                             <template x-for="(field, index) in fields" :key="index">
-                                <div class="space-y-4 border rounded-lg p-4 bg-slate-50">
+                                <div
+                                    class="space-y-4 border border-slate-300 dark:border-slate-700 rounded-lg p-4 bg-slate-50 dark:bg-slate-900">
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                                         <div>
@@ -289,7 +291,8 @@
                         </div>
 
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <!-- inventory -->
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Inventory</p>
 
                             <div class="grid grid-cols-3 divide-x divide-slate-300">
@@ -306,7 +309,7 @@
                                     </button>
                                 </div>
                                 <div class="col-span-2 px-5">
-                                    <p class="text-sm text-slate-700">Options</p>
+                                    <p class="text-sm">Options</p>
 
                                     <div class="mt-4">
                                         <x-input-label for="stock_quantity" :value="_('Add to Stock')" />
@@ -331,7 +334,7 @@
 
                     <div class="md:col-span-2 space-y-10">
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Pricing</p>
 
                             <div>
@@ -371,7 +374,7 @@
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-md p-5 space-y-4">
+                        <div class="bg-white dark:bg-slate-800 rounded-md p-5 space-y-4">
                             <p class="text-xl font-medium">Organize</p>
 
                             <div>

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderPlaced;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -24,6 +28,7 @@ class OrderController extends Controller
     }
     public function cart()
     {
+
         return view('customer.cart');
     }
 
@@ -44,6 +49,7 @@ class OrderController extends Controller
 
     public function getOrderDetails(Request $request, Order $order)
     {
+        Gate::authorize('view', $order);
         $order->load('products.oldestImage', 'statuses', 'latestStatus')->loadCount('products');
 
         return view('customer.order-details', compact('order'));
@@ -63,10 +69,8 @@ class OrderController extends Controller
         $products = json_decode($request->products);
 
         $lineItems = [];
-        $productIds = [];
 
         foreach ($products as $product) {
-            $productIds[] = $product->id;
             $lineItems[] = [
                 'price_data' => [
                     'currency' => 'usd',
@@ -80,7 +84,6 @@ class OrderController extends Controller
             ];
         }
 
-
         $checkout_session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
@@ -88,25 +91,39 @@ class OrderController extends Controller
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
 
-        $order = new Order();
-        $order->user_id = $request->user()->id;
-        $order->save();
+        try {
+            DB::beginTransaction();
 
-        foreach ($products as $product) {
-            $order->products()->attach($product->id, [
-                'quantity' => $product->userSelectedQuantity,
-                'variation_id' => $product->variation_id ?? '',
+            $order = new Order();
+            $order->user_id = $request->user()->id;
+            $order->save();
+
+            if (!$products) {
+                return response('', 500);
+            }
+
+            foreach ($products as $product) {
+                $order->products()->attach($product->id, [
+                    'quantity' => $product->userSelectedQuantity,
+                    'variation_id' => $product->variation_id ?? null,
+                ]);
+            }
+
+            $payment = new Payment([
+                'status' => 'pending',
+                'transaction_id' => $checkout_session->id,
             ]);
+            $order->payment()->save($payment);
+
+            DB::commit();
+
+            return redirect($checkout_session->url);
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+
+            return response()->json(['success' => false, 'message' => 'Something went wrong!'], 500);
         }
-
-        $payment = new Payment([
-            'status' => 'pending',
-            'transaction_id' => $checkout_session->id,
-        ]);
-        $order->payment()->save($payment);
-
-
-        return redirect($checkout_session->url);
     }
 
     public function success(Request $request)
@@ -125,6 +142,7 @@ class OrderController extends Controller
             $paymentMethodDetails = \Stripe\PaymentMethod::retrieve($paymentIntent->payment_method);
 
             $customer = $session->customer_details;
+
             $order = Order::whereHas('payment', function (Builder $query) use ($session) {
                 $query->where('transaction_id', $session->id);
             })->with('payment')->first();
@@ -141,6 +159,8 @@ class OrderController extends Controller
                 ]);
             }
 
+            Mail::to($request->user())->send(new OrderPlaced());
+
             $customerName = $customer->name;
             $orderNumber = $order->order_number;
 
@@ -155,8 +175,70 @@ class OrderController extends Controller
         return view('customer.checkout-cancel');
     }
 
-    public function webhook()
+    public function webhook(Request $request)
     {
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+
+        $payload = @file_get_contents('php://input');
+        $event = null;
+
+        try {
+            $event = \Stripe\Event::constructFrom(
+                json_decode($payload, true)
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response('', 400);
+        }
+        if ($endpoint_secret) {
+            // Only verify the event if there is an endpoint secret defined
+            // Otherwise use the basic decoded event
+            $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+            try {
+                $event = \Stripe\Webhook::constructEvent(
+                    $payload,
+                    $sig_header,
+                    $endpoint_secret
+                );
+            } catch (\Stripe\Exception\SignatureVerificationException $e) {
+                return response('', 400);
+            }
+        }
+
+        // Handle the event
+        switch ($event->type) {
+            case 'payment_intent.completed':
+                $session = $event->data->object;
+                $sessionId = $session->id;
+
+                $paymentIntent = \Stripe\PaymentIntent::retrieve($session->payment_intent);
+                $paymentMethodDetails = \Stripe\PaymentMethod::retrieve($paymentIntent->payment_method);
+
+                $order = Order::whereHas('payment', function (Builder $query) use ($session) {
+                    $query->where('transaction_id', $session->id);
+                })->with('payment')->first();
+
+                if ($order->payment->status != 'completed') {
+                    $order->payment()->update([
+                        'status' => 'completed',
+                        'amount' => $session->amount_total,
+                        'payment_method' => $paymentMethodDetails->type,
+                    ]);
+                }
+
+                if ($order) {
+
+                }
+
+                break;
+
+            default:
+                // Unexpected event type
+                error_log('Received unknown event type');
+        }
+
+        return response('', 200);
 
     }
 

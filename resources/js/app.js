@@ -108,6 +108,14 @@ document.addEventListener('alpine:init', () => {
             window.dispatchEvent(new CustomEvent(eventName, { detail }));
         },
     });
+
+    Alpine.store('darkMode', {
+        isDark: Alpine.$persist(false),
+
+        toggle() {
+            this.isDark = !this.isDark;
+        }
+    });
 });
 
 // Initialize Alpine.js

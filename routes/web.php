@@ -11,6 +11,10 @@ use App\Http\Controllers\Customer\CategoryController;
 use App\Http\Controllers\Customer\OrderController;
 use App\Http\Controllers\Customer\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Mail\OrderPlaced;
+use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 //  guest customer
@@ -21,11 +25,20 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('products/{product}', 'show')->name('products.show');
 });
 
-Route::get('cart', [OrderController::class, 'cart'])->name('cart');
+Route::controller(OrderController::class)->group(function () {
+    Route::get('cart', 'cart')->name('cart');
+    Route::post('/webhook', 'webhook')->name('checkout.webhook');
+});
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('category/{category}', 'show')->name('category.products.show');
     Route::get('category/{category}/list', 'getCategoryProducts')->name('category.products.list');
+});
+
+Route::get('test', function (Request $request) {
+    $order = Order::find(1);
+
+    Mail::to($request->user())->send(new OrderPlaced());
 });
 
 // authenticated user
@@ -42,7 +55,6 @@ Route::middleware('auth')->group(function () {
         Route::post('checkout', 'checkout')->name('checkout');
         Route::get('/success', 'success')->name('checkout.success');
         Route::get('/cancel', 'cancel')->name('checkout.cancel');
-        Route::post('webhook', 'webhook')->name('checkout.webhook');
 
         // get orders
         Route::get('orders', 'index')->name('orders');

@@ -1,6 +1,6 @@
 <footer>
     <div
-        class="grid grid-cols-1  mt-5:grid-cols-2 md:grid-cols-4 gap-7 sm:px-6 md:px-8 py-8 bg-stone-200 dark:bg-slate-800 dark:text-slate-300">
+        class="grid grid-cols-1  mt-5:grid-cols-2 md:grid-cols-4 gap-7 sm:px-6 md:px-8 py-8 bg-slate-200/70 dark:bg-slate-800 dark:text-slate-300">
         <div>
             <a href="#" class=" w-fit text-2xl font-bold text-black dark:text-white">
                 <span class="sr-only">homepage</span>
@@ -31,7 +31,7 @@
                         d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                 </svg>
 
-                <span class="text-lg font-medium">Our Store Location</span>
+                <span class="font-medium">Our Store Location</span>
             </div>
 
             <ul class="text-sm mt-3 list-decimal list-inside">
@@ -41,10 +41,10 @@
         </div>
         <div>
             <span
-                class="text-lg font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">
+                class="font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">
                 Top Categories</span>
 
-            <div class="flex flex-col gap-2 text- mt-5">
+            <div class="flex flex-col gap-2 text-sm mt-5">
                 <a href="{{ route('category.products.show', 'Phones & Tablets') }}">Phone & Tables</a>
                 <a href="{{ route('category.products.show', 'TVS & Audio') }}">TVS & Audio</a>
                 <a href="{{ route('category.products.show', 'Appliances') }}">Appliances</a>
@@ -55,10 +55,10 @@
 
         <div>
             <span
-                class="text-lg font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">Important
+                class="font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">Important
                 Links</span>
 
-            <div class="flex flex-col gap-2 text- mt-5">
+            <div class="flex flex-col gap-2 text-sm mt-5">
                 <a href="#">About Us</a>
                 <a href="#">Contact Us</a>
                 <a href="#">Faq</a>
@@ -69,10 +69,10 @@
 
         <div>
             <span
-                class="text-lg font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">Payment
+                class="font-medium relative before:absolute before:top-full before:w-[50%] before:h-[3px] before:bg-slate-700 dark:before:bg-slate-300 before:inset-0 before:mt-2 before:rounded-md">Payment
                 Method</span>
 
-            <div class="flex flex-col gap-2 text- mt-5">
+            <div class="flex flex-col gap-2 text-sm mt-5">
                 <p>Cash on Delivery</p>
                 <p>Online Payment</p>
                 <p>Paypal</p>
@@ -81,7 +81,8 @@
         </div>
     </div>
 
-    <div class="bg-stone-300 dark:bg-slate-800 sm:px-6 md:px-8 py-4 flex items-center gap-5">
+    <div
+        class="bg-slate-200 border-t border-slate-300 dark:border-slate-700 dark:bg-slate-800 sm:px-6 md:px-8 py-4 flex items-center gap-5">
         <p class="text-sm">&copy; {{ date('Y') }} Shopsmart. All rights reserved</p>
 
         <div class="flex items-center gap-3 text-sm ms-auto">

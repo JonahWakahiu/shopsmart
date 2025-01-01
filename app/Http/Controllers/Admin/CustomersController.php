@@ -61,7 +61,7 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -78,7 +78,7 @@ class CustomersController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('admin.customers.edit', compact('user'));
     }
 
     /**

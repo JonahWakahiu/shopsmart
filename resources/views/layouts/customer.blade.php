@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data :class="{ 'dark': $store.darkMode.isDark }">
 
 <head>
     <meta charset="utf-8">
@@ -16,7 +16,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300" x-data>
+<body class="font-sans antialiased bg-slate-100 text-slate-700 dark:bg-slate-900 dark:text-slate-300">
     @include('layouts.navbar')
 
     {{ $slot }}

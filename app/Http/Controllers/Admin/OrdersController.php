@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class OrdersController extends Controller
@@ -68,6 +69,8 @@ class OrdersController extends Controller
      */
     public function show(Order $order)
     {
+        Gate::authorize('view', $order);
+
         $order->load([
             'user' => function ($query) {
                 $query->withCount('orders');

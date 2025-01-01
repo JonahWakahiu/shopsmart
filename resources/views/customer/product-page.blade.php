@@ -99,7 +99,7 @@
                         </template>
                     </div>
                     <p x-text="product.short_description"></p>
-                    <div class="border-b border-slate-300 pt-5"></div>
+                    <div class="border-b border-slate-300 dark:border-slate-700 pt-5"></div>
 
                     <template x-if="groupedVariations">
                         <div>
@@ -122,7 +122,7 @@
 
                             <div class="flex items-center space-x-2">
                                 <button @click="decreaseQuantity"
-                                    class="bg-slate-100 dark:bg-slate-700 rounded-md p-1 shadow-md border border-slate-200 flex items-center justify-center text-blue-500"
+                                    class="bg-slate-100 dark:bg-slate-800 rounded-md p-1 shadow-md border border-slate-200 dark:border-slate-700 flex items-center justify-center text-blue-500"
                                     type="button">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
@@ -134,7 +134,7 @@
                                 <div class="p-2 text-sm font-medium" x-text="quantity"></div>
 
                                 <button @click="increaseQuantity"
-                                    class="bg-slate-100 dark:bg-slate-700  rounded-md p-1 shadow-md border border-slate-200  flex items-center justify-center text-blue-500"
+                                    class="bg-slate-100 dark:bg-slate-800  rounded-md p-1 shadow-md border border-slate-200 dark:border-slate-700  flex items-center justify-center text-blue-500"
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                         class="bi bi-plus size-5" viewBox="0 0 16 16">

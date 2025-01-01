@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data :class="{ 'dark': $store.darkMode.isDark }">
 
 <head>
     <meta charset="utf-8">
@@ -99,7 +99,7 @@
                     <div class="bg-white rounded-md flex flex-col py-2">
                         <a href="{{ route('profile.edit') }}" @class([
                             'w-full py-2 px-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 inline-flex items-center gap-2',
-                            'bg-stone-200' => request()->routeIs('profile.edit'),
+                            'bg-slate-200' => request()->routeIs('profile.edit'),
                         ])>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-person size-5"
                                 viewBox="0 0 16 16">
@@ -111,7 +111,7 @@
 
                         <a href="{{ route('orders') }}" @class([
                             'w-full py-2 px-3 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 inline-flex items-center gap-2',
-                            'bg-stone-200' => request()->routeIs('orders', 'orders.*'),
+                            'bg-slate-200' => request()->routeIs('orders', 'orders.*'),
                         ])>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 class="size-5 shrink-0" aria-hidden="true">

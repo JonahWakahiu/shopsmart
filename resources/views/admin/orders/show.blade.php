@@ -180,26 +180,37 @@
                                         <th scope="col" class="p-3">Price</th>
                                         <th scope="col" class="p-3">Discount</th>
                                         <th scope="col" class="p-3">QTY</th>
+                                        <th scope="col" class="p-3">Total Discount</th>
                                         <th scope="col" class="p-3">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-300 dark:divide-slate-700">
-                                    <template x-for="product in order.products" :key="product.id">
+                                    <template x-for="(product, id) in orderProducts" :key="id">
                                         <tr>
                                             <td class="p-3 min-w-[250px]">
                                                 <a :href="`{{ route('products.show', ':id') }}`.replace(':id', product.id)"
                                                     class="flex items-center gap-2.5 min-w-fit">
                                                     <img :src="product.oldest_image.url" alt="product.name"
-                                                        class="size-11 rounded-md object-center object-cover shrink-0">
+                                                        class="w-14 h-16 rounded-md object-center object-cover shrink-0">
 
-                                                    <div class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
-                                                        x-text="product.name"></div>
+                                                    <div class="">
+                                                        <p class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
+                                                            x-text="product.name"></p>
+                                                        <div class="mt-2 text-sm">
+                                                            <span x-cloak x-show="product.variation_type"
+                                                                x-text="product.variation_type + ':'"></span>
+                                                            <span class="ms-2" x-cloak
+                                                                x-show="product.variation_value"
+                                                                x-text="product.variation_value"></span>
+                                                        </div>
+                                                    </div>
                                                 </a>
                                             </td>
-                                            <td class="p-3" x-text="'$'+product.pivot.price_at_order"></td>
-                                            <td class="p-3" x-text="'$'+product.pivot.discount_at_order ?? 0"></td>
+                                            <td class="p-3" x-text="'$'+product.pivot.price"></td>
+                                            <td class="p-3" x-text="'$'+product.pivot.discount ?? 0"></td>
                                             <td class="p-3" x-text="product.pivot.quantity"></td>
-                                            <td class="p-3" x-text="'$'+product.pivot.price_total"></td>
+                                            <td class="p-3" x-text="product.pivot.items_discount"></td>
+                                            <td class="p-3" x-text="'$'+product.pivot.items_total"></td>
                                         </tr>
                                     </template>
                                 </tbody>
@@ -208,7 +219,7 @@
 
                         <div class="flex items-center justify-between py-3  text-lg font-medium">
                             <p>Items subtotal</p>
-                            <p x-text="'$'+order.total_price"></p>
+                            <p x-text="'$'+order.sub_total"></p>
                         </div>
                     </div>
 
@@ -366,7 +377,7 @@
                         <div class="space-y-3 mt-3">
                             <div class="flex items-center justify-between">
                                 <span>Items subtotal:</span>
-                                <span x-text="'$'+order.total_price"></span>
+                                <span x-text="'$'+order.sub_total"></span>
                             </div>
 
                             <div class="flex items-center justify-between">
@@ -383,7 +394,7 @@
 
                             <div class="flex items-center justify-between text-ld font-medium">
                                 <span>Total</span>
-                                <span x-text="'$'+(order.total_price - order.total_discount).toFixed(2)"></span>
+                                <span x-text="'$'+ Number(order.total).toFixed(2)"></span>
                             </div>
 
                         </div>
@@ -457,6 +468,7 @@
             document.addEventListener('alpine:init', () => {
                 Alpine.data('viewOrder', () => ({
                     order: {},
+                    orderProducts: {},
                     paymentStatus: '',
                     orderStatuses: [
                         'pending', 'approved', 'processing', 'shipped', 'delivered',
@@ -591,6 +603,7 @@
 
                     init() {
                         this.order = @json($order);
+                        this.orderProducts = @json($orderProducts);
                         console.log(this.order);
 
                     },

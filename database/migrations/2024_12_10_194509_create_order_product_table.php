@@ -16,10 +16,10 @@ return new class extends Migration {
             $table->foreignId('product_id')->constrained()->cascadeOnUpdate();
             $table->foreignId('variation_id')->nullable()->constrained('product_variations')->cascadeOnDelete();
             $table->integer('quantity');
-            $table->decimal('price_at_order', 10, 2);
-            $table->decimal('discount_at_order', 10, 2);
-            $table->decimal('price_total', 10, 2);
-            $table->decimal('discount_total', 10, 2);
+            $table->decimal('price', 10, 2)->comment('Price of product when the order was created');
+            $table->decimal('discount', 10, 2)->comment('Discount of Product when the order was created');
+            $table->decimal('items_discount', 10, 2)->comment('discount total');
+            $table->decimal('items_total', 10, 2)->comment('Price total without the discount');
             $table->timestamps();
         });
     }

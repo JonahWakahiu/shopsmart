@@ -45,6 +45,7 @@ class ProductsController extends Controller
             ->when($filterByCategory, function ($query) use ($filterByCategory) {
                 $query->whereHas('category', fn($subQuery) => $subQuery->where('name', $filterByCategory));
             })
+            ->orderBy('id', 'desc')
             ->paginate($rowsPerPage);
 
         $categories = Category::pluck('name');

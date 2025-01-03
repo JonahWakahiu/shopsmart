@@ -63,7 +63,7 @@ class User extends Authenticatable
     protected function totalSpent(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->orders()->sum(\DB::raw('total_price - total_discount'))
+            get: fn() => $this->orders()->sum('total')
         );
     }
 

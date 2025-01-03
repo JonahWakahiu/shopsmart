@@ -24,15 +24,29 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class)
             ->withPivot(
-                'quantity',
-                'price_at_order',
-                'discount_at_order',
-                'price_total',
-                'discount_total',
                 'variation_id',
+                'quantity',
+                'price',
+                'discount',
+                'items_total',
+                'items_discount',
             )
             ->using(OrderProduct::class)
             ->withTimestamps();
+    }
+
+    public function orderProducts()
+    {
+        return $this->products->map(function ($product) {
+            $variation = $product->variations->find($product->pivot->variation_id);
+            $product->image = $product->oldestImage->url;
+            if ($variation) {
+                $product->variation_type = $variation->type;
+                $product->variation_value = $variation->value;
+                $product->price = $variation->price;
+            }
+            return $product;
+        });
     }
 
     public function statuses(): HasMany

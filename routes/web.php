@@ -13,6 +13,7 @@ use App\Http\Controllers\Customer\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Mail\OrderPlaced;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,8 +38,12 @@ Route::controller(CategoryController::class)->group(function () {
 
 Route::get('test', function (Request $request) {
     $order = Order::find(1);
+    $user = User::find(1);
 
-    Mail::to($request->user())->send(new OrderPlaced());
+    // $order->load('products');
+    // dd($order);
+
+    return view('mails.order-created', compact('user', 'order'));
 });
 
 // authenticated user

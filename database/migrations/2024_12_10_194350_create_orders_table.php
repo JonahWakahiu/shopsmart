@@ -14,7 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('order_number')->unique();
             $table->decimal('total_discount', 10, 2)->nullable();
-            $table->decimal('total_price', 10, 2)->nullable();
+            $table->decimal('sub_total', 10, 2)->nullable();
+            $table->decimal('total', 10, 2)->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

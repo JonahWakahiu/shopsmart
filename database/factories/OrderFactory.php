@@ -21,7 +21,6 @@ class OrderFactory extends Factory
     {
         return [
             'order_number' => fake()->numerify('ORD-######'),
-            'total_price' => fake()->randomFloat(2, 100, 1000),
             'user_id' => User::inRandomOrder()->first()->id,
         ];
     }

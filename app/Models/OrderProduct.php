@@ -13,25 +13,22 @@ class OrderProduct extends Pivot
             $product = Product::findOrFail($pivot->product_id);
 
             if ($product) {
-                $pivot->discount_at_order = $product->discount ?? 0;
-                $pivot->price_at_order = $product->price;
-                $pivot->price_total = $pivot->quantity * $pivot->price_at_order;
-                $pivot->discount_total = $pivot->quantity * $pivot->discount_at_order;
+                $pivot->discount = $product->discount ?? 0;
+                $pivot->price = $product->price;
+                $pivot->items_discount = $pivot->quantity * $pivot->discount;
+                $pivot->items_total = $pivot->quantity * $pivot->price;
             }
-
         });
 
         static::saved(function ($pivot) {
             $order = Order::find($pivot->order_id);
 
             if ($order) {
-                $totalPrice = $order->products()->sum('price_total');
-                $totalDiscount = $order->products()->sum('discount_total');
-
-                $order->total_price = $totalPrice;
-                $order->total_discount = $totalDiscount;
-                $order->save();
+                $order->total_discount = $order->products()->sum('items_discount');
+                $order->sub_total = $order->products()->sum('items_total');
+                $order->total = $order->sub_total - $order->total_discount;
             }
+            $order->save();
         });
     }
 }

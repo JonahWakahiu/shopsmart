@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
@@ -25,24 +26,25 @@ class OrdersController extends Controller
         $q = (string) $request->query('q', '');
 
         // filter
-        $filterByFulfillmentStatus = $request->query('filterByFulfillmentStatus');
-        $filterByPaymentStatus = $request->query('filterByPaymentStatus');
+        $fulfillmentStatus = $request->query('filterByFulfillmentStatus');
+        $paymentStatus = $request->query('filterByPaymentStatus');
 
         $orders = Order::
             when($q, function ($query) use ($q) {
                 $query->where('order_number', 'like', "%$q%");
             })
-            ->when($filterByFulfillmentStatus, function ($query) use ($filterByFulfillmentStatus) {
-                $query->whereHas('latestStatus', function ($query) use ($filterByFulfillmentStatus) {
-                    $query->where('status', 'like', "%$filterByFulfillmentStatus%");
+            ->when($fulfillmentStatus, function ($query) use ($fulfillmentStatus) {
+                $query->whereHas('latestStatus', function ($query) use ($fulfillmentStatus) {
+                    $query->where('status', 'like', "%$fulfillmentStatus%");
                 });
             })
-            ->when($filterByPaymentStatus, function ($query) use ($filterByPaymentStatus) {
-                $query->whereHas('payment', function ($query) use ($filterByPaymentStatus) {
-                    $query->where('status', 'like', "%$filterByPaymentStatus%");
+            ->when($paymentStatus, function ($query) use ($paymentStatus) {
+                $query->whereHas('payment', function ($query) use ($paymentStatus) {
+                    $query->where('status', 'like', "%$paymentStatus%");
                 });
             })
-            ->with('user', 'products', 'payment', 'latestStatus')
+            ->with('user', 'payment', 'latestStatus')
+            ->orderBy('id', 'desc')
             ->paginate($rowsPerPage);
 
         return response()->json($orders);
@@ -69,18 +71,18 @@ class OrdersController extends Controller
      */
     public function show(Order $order)
     {
-        Gate::authorize('view', $order);
 
         $order->load([
             'user' => function ($query) {
                 $query->withCount('orders');
             },
             'payment',
-            'products.oldestImage',
             'statuses.changedBy',
             'latestStatus'
         ]);
-        return view('admin.orders.show', compact('order'));
+
+        $orderProducts = $order->orderProducts();
+        return view('admin.orders.show', compact('order', 'orderProducts'));
     }
 
     /**
@@ -167,4 +169,7 @@ class OrdersController extends Controller
         return response()->json(['message' => 'Order deleted successfully']);
 
     }
+
+
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -9,15 +10,17 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPlaced extends Mailable
+class OrderCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public string $customerName,
+        public Order $order
+    ) {
         //
     }
 
@@ -27,7 +30,7 @@ class OrderPlaced extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Placed',
+            subject: 'Order Created',
         );
     }
 
@@ -37,7 +40,7 @@ class OrderPlaced extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.orders.placed',
+            view: 'mails.order-created',
         );
     }
 

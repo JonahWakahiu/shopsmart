@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Mail\OrderPlaced;
+use App\Mail\OrderCreated;
 use App\Models\Order;
 use App\Models\Payment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Stripe\Stripe;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -84,12 +85,13 @@ class OrderController extends Controller
             ];
         }
 
-        $checkout_session = \Stripe\Checkout\Session::create([
+        $session = \Stripe\Checkout\Session::create([
             'line_items' => $lineItems,
             'mode' => 'payment',
             'success_url' => route('checkout.success', [], true) . "?session_id={CHECKOUT_SESSION_ID}",
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
+
 
         try {
             DB::beginTransaction();
@@ -111,13 +113,13 @@ class OrderController extends Controller
 
             $payment = new Payment([
                 'status' => 'pending',
-                'transaction_id' => $checkout_session->id,
+                'transaction_id' => $session->id,
             ]);
             $order->payment()->save($payment);
 
             DB::commit();
 
-            return redirect($checkout_session->url);
+            return redirect($session->url);
 
         } catch (\Throwable $th) {
             DB::rollback();
@@ -141,28 +143,21 @@ class OrderController extends Controller
             $paymentIntent = \Stripe\PaymentIntent::retrieve($session->payment_intent);
             $paymentMethodDetails = \Stripe\PaymentMethod::retrieve($paymentIntent->payment_method);
 
-            $customer = $session->customer_details;
+            $customerName = $session->customer_details->name;
+            $customerEmail = $session->customer_details->email;
 
-            $order = Order::whereHas('payment', function (Builder $query) use ($session) {
-                $query->where('transaction_id', $session->id);
-            })->with('payment')->first();
-
-            if (!$order) {
-                throw new NotFoundHttpException();
-            }
-
-            if ($order->payment->status != 'completed') {
-                $order->payment()->update([
+            $payment = Payment::where('transaction_id', $session->id)->first();
+            if ($payment->status != 'completed') {
+                $payment->update([
                     'status' => 'completed',
                     'amount' => $session->amount_total,
-                    'payment_method' => $paymentMethodDetails->type,
+                    'payment_method' => 'card',
                 ]);
+
+                Mail::to($customerEmail)->queue(new OrderCreated($customerName, $payment->order));
             }
 
-            Mail::to($request->user())->send(new OrderPlaced());
-
-            $customerName = $customer->name;
-            $orderNumber = $order->order_number;
+            $orderNumber = $payment->order->order_number;
 
             return view('customer.checkout-success', compact('customerName', 'orderNumber'));
         } catch (\Exception $e) {
@@ -192,8 +187,7 @@ class OrderController extends Controller
             return response('', 400);
         }
         if ($endpoint_secret) {
-            // Only verify the event if there is an endpoint secret defined
-            // Otherwise use the basic decoded event
+
             $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
             try {
                 $event = \Stripe\Webhook::constructEvent(
@@ -208,26 +202,19 @@ class OrderController extends Controller
 
         // Handle the event
         switch ($event->type) {
-            case 'payment_intent.completed':
+            case 'checkout.session.completed':
                 $session = $event->data->object;
-                $sessionId = $session->id;
 
-                $paymentIntent = \Stripe\PaymentIntent::retrieve($session->payment_intent);
-                $paymentMethodDetails = \Stripe\PaymentMethod::retrieve($paymentIntent->payment_method);
+                $payment = Payment::where('transaction_id', $session->id)->first();
 
-                $order = Order::whereHas('payment', function (Builder $query) use ($session) {
-                    $query->where('transaction_id', $session->id);
-                })->with('payment')->first();
-
-                if ($order->payment->status != 'completed') {
-                    $order->payment()->update([
+                if ($payment->status != 'completed') {
+                    $payment->update([
                         'status' => 'completed',
                         'amount' => $session->amount_total,
-                        'payment_method' => $paymentMethodDetails->type,
+                        'payment_method' => 'card',
                     ]);
-                }
 
-                if ($order) {
+                    Mail::to($payment->order->user)->send(new OrderCreated($payment->order->user->name, $payment->order));
 
                 }
 
@@ -239,7 +226,6 @@ class OrderController extends Controller
         }
 
         return response('', 200);
-
     }
 
 }

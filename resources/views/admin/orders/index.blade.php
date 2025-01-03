@@ -66,7 +66,7 @@
                                         class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
                                         x-text="order.order_number"></a>
                                 </td>
-                                <td class="p-3 font-medium  dark:text-white" x-text="'$ ' +order.total_price">
+                                <td class="p-3 font-medium  dark:text-white" x-text="'$ ' +order.total">
                                 </td>
                                 <td class="p-3">
                                     <div class="flex items-center flex-shrink-0 gap-3">

@@ -145,6 +145,13 @@
 
         }
 
+        .item-desc .variation {
+            font-size: 14px;
+            line-height: 20px;
+            display: flex;
+            column-gap: 5px;
+        }
+
         .item-price p {
             color: orange;
         }
@@ -247,7 +254,7 @@
 
 
                     <div class="item-list">
-                        @foreach ($order->products as $product)
+                        @foreach ($orderProducts as $product)
                             <div class="item">
                                 <div class="item-image">
                                     <img src="{{ $product->oldestImage->url }}" alt="{{ $product->name }}">
@@ -255,6 +262,15 @@
                                 <div class="item-desc">
                                     <p>{{ $product->name }}</p>
                                     <p>Items: {{ $product->pivot->quantity }}</p>
+                                    <div class="variation">
+                                        @if ($product->variation_type)
+                                            <span>{{ $product->variation_type }}:</span>
+                                        @endif
+                                        @if ($product->variation_value)
+                                            <span>{{ $product->variation_value }}</span>
+                                        @endif
+                                    </div>
+
                                 </div>
 
                                 <!-- product prices -->

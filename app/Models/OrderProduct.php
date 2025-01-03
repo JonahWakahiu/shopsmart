@@ -14,7 +14,12 @@ class OrderProduct extends Pivot
 
             if ($product) {
                 $pivot->discount = $product->discount ?? 0;
+
                 $pivot->price = $product->price;
+                if ($pivot->variation_id) {
+                    $variation = $product->variations->find($pivot->variation_id);
+                    $pivot->price = $variation->price;
+                }
                 $pivot->items_discount = $pivot->quantity * $pivot->discount;
                 $pivot->items_total = $pivot->quantity * $pivot->price;
             }

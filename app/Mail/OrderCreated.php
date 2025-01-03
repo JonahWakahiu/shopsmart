@@ -19,7 +19,8 @@ class OrderCreated extends Mailable
      */
     public function __construct(
         public string $customerName,
-        public Order $order
+        public Order $order,
+        public $orderProducts,
     ) {
         //
     }

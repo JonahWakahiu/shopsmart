@@ -123,7 +123,6 @@ class OrderController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-
             return response()->json(['success' => false, 'message' => 'Something went wrong!'], 500);
         }
     }
@@ -154,7 +153,9 @@ class OrderController extends Controller
                     'payment_method' => 'card',
                 ]);
 
-                Mail::to($customerEmail)->queue(new OrderCreated($customerName, $payment->order));
+
+                $orderProducts = $payment->order->orderProducts();
+                Mail::to($payment->order->user)->send(new OrderCreated($payment->order->user->name, $payment->order, $orderProducts));
             }
 
             $orderNumber = $payment->order->order_number;
@@ -214,8 +215,8 @@ class OrderController extends Controller
                         'payment_method' => 'card',
                     ]);
 
-                    Mail::to($payment->order->user)->send(new OrderCreated($payment->order->user->name, $payment->order));
-
+                    $orderProducts = $payment->order->orderProducts();
+                    Mail::to($payment->order->user)->send(new OrderCreated($payment->order->user->name, $payment->order, $orderProducts));
                 }
 
                 break;

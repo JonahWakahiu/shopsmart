@@ -194,7 +194,7 @@
                                                         class="w-14 h-16 rounded-md object-center object-cover shrink-0">
 
                                                     <div class="">
-                                                        <p class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1"
+                                                        <p class="whitespace-normal text-blue-500 hover:text-blue-600 hover:underline underline-offset-1 capitalize"
                                                             x-text="product.name"></p>
                                                         <div class="mt-2 text-sm">
                                                             <span x-cloak x-show="product.variation_type"
